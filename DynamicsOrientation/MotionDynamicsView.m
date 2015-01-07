@@ -14,6 +14,8 @@
     UIDynamicAnimator* _animator;
     UIGravityBehavior* _gravity;
     UICollisionBehavior* _collision;
+    UIDynamicItemBehavior* _rotationRestrict;
+    
     NSMutableArray *dynamicItems;
 
 }
@@ -40,35 +42,49 @@
 -(void) setup
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processMotion:) name:@"MotionDetected" object:nil];
-    
-    [self createDynamicViews];
+}
+
+
+-(void) addSubviewsWithImages:(NSArray*)images
+{
+    [self createDynamicViews:images];
     
     _animator = [[UIDynamicAnimator alloc] initWithReferenceView:self];
     _gravity = [[UIGravityBehavior alloc] initWithItems:dynamicItems];
     [_animator addBehavior:_gravity];
-    
-    _collision = [[UICollisionBehavior alloc]
-                  initWithItems:dynamicItems];
+
+    _collision = [[UICollisionBehavior alloc] initWithItems:dynamicItems];
     _collision.translatesReferenceBoundsIntoBoundary = YES;
     [_animator addBehavior:_collision];
-
+    
+    _rotationRestrict = [[UIDynamicItemBehavior alloc] initWithItems:dynamicItems];
+    _rotationRestrict.elasticity = 0.6;
+    _rotationRestrict.allowsRotation = false;
+    [_animator addBehavior:_rotationRestrict];
 
 }
 
--(void) createDynamicViews
+-(void) createDynamicViews:(NSArray*)images
 {
-    const NSUInteger N = 15;
+    const NSUInteger N = [images count];;
     
     dynamicItems = [[NSMutableArray alloc]initWithCapacity:N];
     
     for(int i=0; i< N; i++)
     {
         
-        UIView* square = [[UIView alloc] initWithFrame:CGRectMake(drand48() * 100,
-                                                                  drand48() * 100,
-                                                                  20 + drand48() * 100,
-                                                                  20 + drand48() * 100)];
-        square.layer.cornerRadius = 8;
+//        UIView* square = [[UIView alloc] initWithFrame:CGRectMake(drand48() * 100,
+//                                                                  drand48() * 100,
+//                                                                  20 + drand48() * 100,
+//                                                                  20 + drand48() * 100)];
+        
+        UIImageView *square = [[UIImageView alloc]initWithFrame:CGRectMake(drand48() * 100,
+                                                                           drand48() * 100,
+                                                                           80,
+                                                                           80)];
+        square.layer.masksToBounds = YES;
+        square.image = images[i];
+        square.layer.cornerRadius = 20;
         
         square.backgroundColor = [UIColor grayColor];
         [self insertSubview:square atIndex:[self.subviews count] ];

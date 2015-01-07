@@ -17,7 +17,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Milky_Way_2005.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="nXI-cA-g5f" customClass="MotionImageView">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="nXI-cA-g5f" customClass="MotionImageView">
                                 <rect key="frame" x="-19" y="-50" width="452" height="836"/>
                             </imageView>
                         </subviews>
@@ -28,6 +28,11 @@
                             <constraint firstItem="nXI-cA-g5f" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" constant="-35" id="o2V-Zh-50o"/>
                             <constraint firstItem="nXI-cA-g5f" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="topMargin" constant="-50" id="xZ5-Kx-52N"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="subviews">
+                                <exclude reference="nXI-cA-g5f"/>
+                            </mask>
+                        </variation>
                     </view>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina55"/>
@@ -36,7 +41,4 @@
             </objects>
         </scene>
     </scenes>
-    <resources>
-        <image name="Milky_Way_2005.jpg" width="5600" height="5600"/>
-    </resources>
 </document>

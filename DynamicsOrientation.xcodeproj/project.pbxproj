@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		580BEF3B1A066BED00835FF2 /* MotionDynamicsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 580BEF3A1A066BED00835FF2 /* MotionDynamicsView.m */; };
-		580BEF3D1A0680D700835FF2 /* Milky_Way_2005.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 580BEF3C1A0680D700835FF2 /* Milky_Way_2005.jpg */; };
 		58A0C8C11A0568E30099A4FF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A0C8C01A0568E30099A4FF /* main.m */; };
 		58A0C8C41A0568E30099A4FF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A0C8C31A0568E30099A4FF /* AppDelegate.m */; };
 		58A0C8C71A0568E30099A4FF /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A0C8C61A0568E30099A4FF /* ViewController.m */; };
@@ -21,7 +20,6 @@
 /* Begin PBXFileReference section */
 		580BEF391A066BED00835FF2 /* MotionDynamicsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MotionDynamicsView.h; sourceTree = "<group>"; };
 		580BEF3A1A066BED00835FF2 /* MotionDynamicsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MotionDynamicsView.m; sourceTree = "<group>"; };
-		580BEF3C1A0680D700835FF2 /* Milky_Way_2005.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Milky_Way_2005.jpg; sourceTree = "<group>"; };
 		58A0C8BB1A0568E30099A4FF /* DynamicsOrientation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DynamicsOrientation.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		58A0C8BF1A0568E30099A4FF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		58A0C8C01A0568E30099A4FF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -66,7 +64,6 @@
 		58A0C8BD1A0568E30099A4FF /* DynamicsOrientation */ = {
 			isa = PBXGroup;
 			children = (
-				580BEF3C1A0680D700835FF2 /* Milky_Way_2005.jpg */,
 				58A0C8C21A0568E30099A4FF /* AppDelegate.h */,
 				58A0C8C31A0568E30099A4FF /* AppDelegate.m */,
 				58A0C8C51A0568E30099A4FF /* ViewController.h */,
@@ -149,7 +146,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				580BEF3D1A0680D700835FF2 /* Milky_Way_2005.jpg in Resources */,
 				58A0C8CA1A0568E30099A4FF /* Main.storyboard in Resources */,
 				58A0C8CF1A0568E30099A4FF /* LaunchScreen.xib in Resources */,
 				58A0C8CC1A0568E30099A4FF /* Images.xcassets in Resources */,
