@@ -8,67 +8,98 @@
 
 #import "ViewController.h"
 #import "MotionDynamicsView.h"
+#import <RestKit/RestKit.h>
+#import "StoreEntity.h"
 
 @interface ViewController ()
-    @property(nonatomic, strong) NSURLRequest *jsonRequest;
-    @property(nonatomic, strong) NSMutableData *responseData;
-    @property(nonatomic, strong) NSMutableArray *images;
+    @property(nonatomic, strong) NSMutableArray *entities;
+    @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loadingIndicator;
+
 @end
 
 @implementation ViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.entities = [[NSMutableArray alloc]init];
+
+    //@"https://itunes.apple.com/search?term=jack+johnson&limit=200"
     
-    self.responseData = [NSMutableData data];
-    self.images = [[NSMutableArray alloc]init];
-    
-    self.jsonRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:@"https://itunes.apple.com/search?term=sergey+yuzepovich&media=software"
-                                                     //@"https://itunes.apple.com/search?term=jack+johnson&limit=200"
-                                                     ]];
-    
-    [[NSURLConnection alloc]initWithRequest:self.jsonRequest delegate:self];
+    [self initializeRestkit];
+    [self loadApps];
 }
 
 
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
-//    NSLog(@"didReceiveResponse");
-    [self.responseData setLength:0];
+-(void)initializeRestkit
+{
+    NSURL *apiUrl = [NSURL URLWithString:@"https://itunes.apple.com"];
+    AFHTTPClient *client = [[AFHTTPClient alloc]initWithBaseURL:apiUrl];
+    RKObjectManager *objectManager = [[RKObjectManager alloc]initWithHTTPClient:client];
+    RKObjectMapping *storeEntityMapping = [RKObjectMapping mappingForClass:[StoreEntity class]];
+    [storeEntityMapping addAttributeMappingsFromDictionary:[StoreEntity attributeMapping]];
+    
+    RKResponseDescriptor *responseDescriptor =  [RKResponseDescriptor    responseDescriptorWithMapping:storeEntityMapping
+                                                                        method:RKRequestMethodGET
+                                                                        pathPattern:@"/search"
+                                                                            keyPath:@"results"
+                                                                        statusCodes:[NSIndexSet indexSetWithIndex:200]];
+    [objectManager addResponseDescriptor:responseDescriptor];
+    [RKMIMETypeSerialization registerClass:[RKNSJSONSerialization class] forMIMEType:@"text/javascript"];
 }
 
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
-    [self.responseData appendData:data];
-}
+-(void)loadApps
+{
+    __block NSUInteger finishedRequests = 0;
+    __weak typeof(self) weakSelf = self;
+    void (^requestSuccessfullBlock)(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) =
+    ^void(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+        [weakSelf.entities addObjectsFromArray: mappingResult.array];
 
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    NSLog(@"didFailWithError");
-    NSLog(@"Connection failed: %@", [error description]);
-}
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-    
-    NSError *myError = nil;
-    NSDictionary *res = [NSJSONSerialization JSONObjectWithData:self.responseData options:NSJSONReadingMutableLeaves error:&myError];
-    
-    NSArray *results = [res objectForKey:@"results"];
-    
-    for (NSDictionary *result in results) {
-        NSString *iconRef = [result objectForKey:@"artworkUrl100"];
+        if (finishedRequests == 0) {
+            finishedRequests++;
+            return;
+        }
         
-        UIImage *img = [UIImage imageWithData:[NSData dataWithContentsOfURL: [NSURL URLWithString: iconRef ]]];
-        [self.images addObject:img];
-//            NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:iconRef]];
-//            [[NSURLConnection alloc]initWithRequest:request delegate:self];
-    }
+        for (StoreEntity *entity in self.entities)
+        {
+            __weak typeof(entity) weakEntity = entity;
+            entity.mediumIconLoaded = ^{
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [weakSelf addIcon:weakEntity.iconMedium];
+                });
+            };
+        }
+    };
+
     
-    [ (MotionDynamicsView*)self.view addSubviewsWithImages: self.images ];
+    NSString *name = @"yuzepovich";
+    
+    NSDictionary *queryParams = @{@"term" : name,
+                                  @"media" : @"software"};
+    
+    [[RKObjectManager sharedManager] getObjectsAtPath:@"/search"
+                                           parameters:queryParams
+                                              success: requestSuccessfullBlock
+                                              failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                                  NSLog(@"Error occured: %@", error);
+                                              }];
+    queryParams = @{@"term" : name,
+                      @"media" : @"software",
+                      @"entity": @"iPadSoftware"};
+    [[RKObjectManager sharedManager] getObjectsAtPath:@"/search"
+                                           parameters:queryParams
+                                              success: requestSuccessfullBlock
+                                              failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                                  NSLog(@"Error occured: %@", error);
+                                              }];
+
 }
 
 
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+-(void)addIcon:(UIImage*)icon
+{
+    [(MotionDynamicsView*)self.view addSubviewsWithImages: @[icon] totalCount:self.entities.count];
+    [self.loadingIndicator stopAnimating];
 }
-
 @end

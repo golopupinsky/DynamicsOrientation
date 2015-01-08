@@ -15,9 +15,7 @@
     UIGravityBehavior* _gravity;
     UICollisionBehavior* _collision;
     UIDynamicItemBehavior* _rotationRestrict;
-    
-    NSMutableArray *dynamicItems;
-
+    NSUInteger _totalCount;
 }
 
 - (instancetype)initWithCoder:(NSCoder *)coder
@@ -29,66 +27,59 @@
     return self;
 }
 
-- (instancetype)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        [self setup];
-    }
-    return self;
-}
-
-
 -(void) setup
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processMotion:) name:@"MotionDetected" object:nil];
 }
 
-
--(void) addSubviewsWithImages:(NSArray*)images
+-(void) addSubviewsWithImages:(NSArray*)images totalCount:(NSUInteger)count;
 {
-    [self createDynamicViews:images];
+    _totalCount = count;
+    NSMutableArray *newItems = [[NSMutableArray alloc]init];
+    [self createDynamicViews:images views:newItems];
     
-    _animator = [[UIDynamicAnimator alloc] initWithReferenceView:self];
-    _gravity = [[UIGravityBehavior alloc] initWithItems:dynamicItems];
-    [_animator addBehavior:_gravity];
-
-    _collision = [[UICollisionBehavior alloc] initWithItems:dynamicItems];
-    _collision.translatesReferenceBoundsIntoBoundary = YES;
-    [_animator addBehavior:_collision];
+    if (_animator == nil) {
+        _animator = [[UIDynamicAnimator alloc] initWithReferenceView:self];
+        _gravity = [[UIGravityBehavior alloc] initWithItems:newItems];
+        [_animator addBehavior:_gravity];
+        
+        _collision = [[UICollisionBehavior alloc] initWithItems:newItems];
+        _collision.translatesReferenceBoundsIntoBoundary = YES;
+        [_animator addBehavior:_collision];
+        
+        _rotationRestrict = [[UIDynamicItemBehavior alloc] initWithItems:newItems];
+        _rotationRestrict.elasticity = 0.6;
+        _rotationRestrict.allowsRotation = false;
+        [_animator addBehavior:_rotationRestrict];
+    }
     
-    _rotationRestrict = [[UIDynamicItemBehavior alloc] initWithItems:dynamicItems];
-    _rotationRestrict.elasticity = 0.6;
-    _rotationRestrict.allowsRotation = false;
-    [_animator addBehavior:_rotationRestrict];
+    for(id i in newItems)
+    {
+        [_gravity addItem:i];
+        [_collision addItem:i];
+        [_rotationRestrict addItem:i];
+    }
 
 }
 
--(void) createDynamicViews:(NSArray*)images
+-(void) createDynamicViews:(NSArray*)images views:(NSMutableArray*)dynamicViews
 {
-    const NSUInteger N = [images count];;
     
-    dynamicItems = [[NSMutableArray alloc]initWithCapacity:N];
-    
-    for(int i=0; i< N; i++)
+    for(int i=0; i< [images count]; i++)
     {
-        
-//        UIView* square = [[UIView alloc] initWithFrame:CGRectMake(drand48() * 100,
-//                                                                  drand48() * 100,
-//                                                                  20 + drand48() * 100,
-//                                                                  20 + drand48() * 100)];
-        
-        UIImageView *square = [[UIImageView alloc]initWithFrame:CGRectMake(drand48() * 100,
-                                                                           drand48() * 100,
-                                                                           80,
-                                                                           80)];
+        NSUInteger sz = CGRectGetWidth([UIScreen mainScreen].bounds) * CGRectGetHeight([UIScreen mainScreen].bounds) / MAX(5,_totalCount);
+        sz = MIN(80, sz);
+        UIImageView *square = [[UIImageView alloc]initWithFrame:CGRectMake(drand48() * 500,
+                                                                           drand48() * 500,
+                                                                           sz,
+                                                                           sz)];
         square.layer.masksToBounds = YES;
         square.image = images[i];
-        square.layer.cornerRadius = 20;
+        square.layer.cornerRadius = CGRectGetWidth(square.bounds)/5;
         
         square.backgroundColor = [UIColor grayColor];
         [self insertSubview:square atIndex:[self.subviews count] ];
-        [dynamicItems addObject: square];
+        [dynamicViews addObject:square];
     }
 }
 
@@ -102,14 +93,6 @@
 
     v.dx = data.gravity.x + (data.userAcceleration.y + data.userAcceleration.x) * USER_ACCELERATION_MULTIPLIER;
     v.dy = -data.gravity.y + (data.userAcceleration.y + data.userAcceleration.x) * USER_ACCELERATION_MULTIPLIER;
-    
-    //normalizing - does not work well
-//    float sum = abs( v.dx ) + abs( v.dy );;
-//    if(sum > 0.01)
-//    {
-//        v.dx /= sum;
-//        v.dy /= sum;
-//    }
     
     _gravity.gravityDirection = v;
 }

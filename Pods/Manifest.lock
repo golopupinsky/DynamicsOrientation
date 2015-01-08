@@ -22,17 +22,20 @@ PODS:
   - RestKit/Support (0.24.0):
     - TransitionKit (= 2.1.0)
   - RKValueTransformers (1.1.1)
+  - SDiPhoneVersion (1.1.1)
   - SOCKit (1.1)
   - TransitionKit (2.1.0)
 
 DEPENDENCIES:
   - RestKit
+  - SDiPhoneVersion
 
 SPEC CHECKSUMS:
   AFNetworking: 80c4e0652b08eb34e25b9c0ff3c82556fe5967b4
   ISO8601DateFormatterValueTransformer: a705384ea6531255258e25b6480ba1180db703a0
   RestKit: 8e301e50e1d25ce427215539f4fd72463f4a2a58
   RKValueTransformers: 67b4ea3eb6a1c1a0b8c3c37eb4e4c05e4febeba2
+  SDiPhoneVersion: 21958fa669603b61a4052c459a365259380c394c
   SOCKit: d8d0dd3688ae1026c12367570da8fa8e1a6980fb
   TransitionKit: 6a6f3ddda38ae758778aa889dcb930e4f8d64edc
 

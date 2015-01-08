@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface MotionDynamicsView : UIView
--(void) addSubviewsWithImages:(NSArray*)images;
+
+-(void) addSubviewsWithImages:(NSArray*)images totalCount:(NSUInteger)count;
 
 @end

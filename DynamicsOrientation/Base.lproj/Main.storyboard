@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14A388a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vXZ-lx-hvc">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -20,9 +21,24 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="nXI-cA-g5f" customClass="MotionImageView">
                                 <rect key="frame" x="-19" y="-50" width="452" height="836"/>
                             </imageView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="kAd-i7-t6f">
+                                <rect key="frame" x="197" y="358" width="20" height="20"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="40" id="BF8-WG-UFp"/>
+                                    <constraint firstAttribute="height" constant="40" id="Uca-ru-1Nn"/>
+                                </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="BF8-WG-UFp"/>
+                                        <exclude reference="Uca-ru-1Nn"/>
+                                    </mask>
+                                </variation>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="kAd-i7-t6f" firstAttribute="centerY" secondItem="kh9-bI-dsS" secondAttribute="centerY" id="2Mb-n0-sAw"/>
+                            <constraint firstItem="kAd-i7-t6f" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="Wly-W6-xbe"/>
                             <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="nXI-cA-g5f" secondAttribute="bottom" constant="-50" id="XAv-Bl-NiE"/>
                             <constraint firstAttribute="trailingMargin" secondItem="nXI-cA-g5f" secondAttribute="trailing" constant="-35" id="kxk-3u-MeT"/>
                             <constraint firstItem="nXI-cA-g5f" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" constant="-35" id="o2V-Zh-50o"/>
@@ -36,6 +52,9 @@
                     </view>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina55"/>
+                    <connections>
+                        <outlet property="loadingIndicator" destination="kAd-i7-t6f" id="m7M-Kn-e33"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>

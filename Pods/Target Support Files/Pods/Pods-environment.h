@@ -60,6 +60,12 @@
 #define COCOAPODS_VERSION_MINOR_RestKit_Support 24
 #define COCOAPODS_VERSION_PATCH_RestKit_Support 0
 
+// SDiPhoneVersion
+#define COCOAPODS_POD_AVAILABLE_SDiPhoneVersion
+#define COCOAPODS_VERSION_MAJOR_SDiPhoneVersion 1
+#define COCOAPODS_VERSION_MINOR_SDiPhoneVersion 1
+#define COCOAPODS_VERSION_PATCH_SDiPhoneVersion 1
+
 // SOCKit
 #define COCOAPODS_POD_AVAILABLE_SOCKit
 #define COCOAPODS_VERSION_MAJOR_SOCKit 1
