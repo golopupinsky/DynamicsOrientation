@@ -55,10 +55,10 @@
     ^void(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
         [weakSelf.entities addObjectsFromArray: mappingResult.array];
 
-        if (finishedRequests == 0) {
-            finishedRequests++;
-            return;
-        }
+//        if (finishedRequests == 0) {
+//            finishedRequests++;
+//            return;
+//        }
         
         for (StoreEntity *entity in self.entities)
         {
@@ -92,7 +92,6 @@
                                               failure:^(RKObjectRequestOperation *operation, NSError *error) {
                                                   NSLog(@"Error occured: %@", error);
                                               }];
-
 }
 
 

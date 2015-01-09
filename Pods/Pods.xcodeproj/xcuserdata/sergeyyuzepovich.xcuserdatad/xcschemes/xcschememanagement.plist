@@ -24,17 +24,17 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-SDiPhoneVersion.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>Pods-SOCKit.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
 		<key>Pods-TransitionKit.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-pop.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -46,47 +46,6 @@
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
-	<dict>
-		<key>04A65FF303830283CE1DF625</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>58C4EA8E508EC85F69DB6A1C</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>60C58C8B03DC4ECD62E38C24</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>77272FD3E4DB0E540734C4C2</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>A03A6B7BB35E4305D3C359A7</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>A5AE85E491DE00EDF149EAE6</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>D3B398E6D1CB051F6709053A</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>EBDA6F166EF50321375D2574</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-	</dict>
+	<dict/>
 </dict>
 </plist>

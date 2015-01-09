@@ -16,6 +16,7 @@
     UICollisionBehavior* _collision;
     UIDynamicItemBehavior* _rotationRestrict;
     NSUInteger _totalCount;
+    NSTimer *_elementsPositionsFixTimer;
 }
 
 - (instancetype)initWithCoder:(NSCoder *)coder
@@ -30,40 +31,62 @@
 -(void) setup
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processMotion:) name:@"MotionDetected" object:nil];
+    
+    _elementsPositionsFixTimer = [NSTimer timerWithTimeInterval:1 target:self selector:@selector(fixPositions) userInfo:nil repeats:YES];
+    [[NSRunLoop mainRunLoop] addTimer:_elementsPositionsFixTimer forMode:NSRunLoopCommonModes];
+    
+    _animator = [[UIDynamicAnimator alloc] initWithReferenceView:self];
+    _gravity = [[UIGravityBehavior alloc] initWithItems:nil];
+    [_animator addBehavior:_gravity];
+    
+    _collision = [[UICollisionBehavior alloc] initWithItems:nil];
+    _collision.translatesReferenceBoundsIntoBoundary = YES;
+    [_animator addBehavior:_collision];
+    
+    _rotationRestrict = [[UIDynamicItemBehavior alloc] initWithItems:nil];
+    _rotationRestrict.elasticity = 0.6;
+    _rotationRestrict.allowsRotation = false;
+    [_animator addBehavior:_rotationRestrict];
+}
+
+-(void)fixPositions
+{
+    CGRect screen = [UIScreen mainScreen].bounds;
+    float screenMinY = CGRectGetMinY(screen);
+    
+    for (UIView* i in _gravity.items) {
+        float y = CGRectGetMinY( i.frame );
+        if ( abs( y - screenMinY ) > 5000 ) {
+
+            [self removeItem:i];
+            i.frame = CGRectMake(CGRectGetWidth(screen)/2, CGRectGetHeight(screen)/2, CGRectGetWidth(i.bounds), CGRectGetHeight(i.bounds));
+            [self addItem:i];
+        }
+    }
+}
+
+
+-(void)removeItem:(UIView*)i
+{
+    [i removeFromSuperview];
+    
+    [_gravity removeItem:i];
+    [_collision removeItem:i];
+    [_rotationRestrict removeItem:i];
+}
+
+-(void)addItem:(UIView*)i
+{
+    [self insertSubview:i atIndex:[self.subviews count] ];
+
+    [_gravity addItem:i];
+    [_collision addItem:i];
+    [_rotationRestrict addItem:i];
 }
 
 -(void) addSubviewsWithImages:(NSArray*)images totalCount:(NSUInteger)count;
 {
     _totalCount = count;
-    NSMutableArray *newItems = [[NSMutableArray alloc]init];
-    [self createDynamicViews:images views:newItems];
-    
-    if (_animator == nil) {
-        _animator = [[UIDynamicAnimator alloc] initWithReferenceView:self];
-        _gravity = [[UIGravityBehavior alloc] initWithItems:newItems];
-        [_animator addBehavior:_gravity];
-        
-        _collision = [[UICollisionBehavior alloc] initWithItems:newItems];
-        _collision.translatesReferenceBoundsIntoBoundary = YES;
-        [_animator addBehavior:_collision];
-        
-        _rotationRestrict = [[UIDynamicItemBehavior alloc] initWithItems:newItems];
-        _rotationRestrict.elasticity = 0.6;
-        _rotationRestrict.allowsRotation = false;
-        [_animator addBehavior:_rotationRestrict];
-    }
-    
-    for(id i in newItems)
-    {
-        [_gravity addItem:i];
-        [_collision addItem:i];
-        [_rotationRestrict addItem:i];
-    }
-
-}
-
--(void) createDynamicViews:(NSArray*)images views:(NSMutableArray*)dynamicViews
-{
     
     for(int i=0; i< [images count]; i++)
     {
@@ -78,9 +101,11 @@
         square.layer.cornerRadius = CGRectGetWidth(square.bounds)/5;
         
         square.backgroundColor = [UIColor grayColor];
-        [self insertSubview:square atIndex:[self.subviews count] ];
-        [dynamicViews addObject:square];
+
+        [self addItem:square];
     }
+
+
 }
 
 -(void)processMotion:(NSNotification*)notification
@@ -100,6 +125,7 @@
 -(void)dealloc
 {
     [[NSNotificationCenter defaultCenter]removeObserver:self];
+    [_elementsPositionsFixTimer invalidate];
 }
 
 

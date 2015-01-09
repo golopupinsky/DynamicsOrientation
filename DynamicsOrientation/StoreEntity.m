@@ -17,9 +17,9 @@
     @{@"trackId":@"ID",
       @"screenshotUrls":@"phoneScreenshotURLs",
       @"ipadScreenshotUrls":@"tabletScreenshotURLs",
-//      @"artworkUrl60":@"iconSmallURL",
+      @"artworkUrl60":@"iconSmallURL",
       @"artworkUrl100":@"iconMediumURL",
-//      @"artworkUrl512":@"iconLargeURL",
+      @"artworkUrl512":@"iconLargeURL",
       @"artistName":@"artistName",
       @"price":@"price",
       @"formattedPrice":@"formattedPrice",
@@ -30,19 +30,19 @@
 }
 
 
-//-(void)setIconSmallURL:(NSURL *)iconSmallURL
-//{
-//    _iconSmallURL = iconSmallURL;
-//    
-//    [self downloadImageAsync:iconSmallURL completion:^(UIImage *image) {
-//        self.iconSmall = image;
-//        if(self.smallIconLoaded != nil)
-//        {
-//            self.smallIconLoaded();
-//        }
-//    }];
-//}
-//
+-(void)setIconSmallURL:(NSURL *)iconSmallURL
+{
+    _iconSmallURL = iconSmallURL;
+    
+    [self downloadImageAsync:iconSmallURL completion:^(UIImage *image) {
+        self.iconSmall = image;
+        if(self.smallIconLoaded != nil)
+        {
+            self.smallIconLoaded();
+        }
+    }];
+}
+
 -(void)setIconMediumURL:(NSURL *)iconMediumURL
 {
     _iconMediumURL = iconMediumURL;
@@ -56,17 +56,17 @@
     }];
 }
 
-//-(void)setIconLargeURL:(NSURL *)iconLargeURL
-//{
-//    _iconLargeURL = iconLargeURL;
-//    [self downloadImageAsync:iconLargeURL completion:^(UIImage *image) {
-//        self.iconLarge = image;
-//        if(self.largeIconLoaded)
-//        {
-//            self.largeIconLoaded();
-//        }
-//    }];
-//}
+-(void)setIconLargeURL:(NSURL *)iconLargeURL
+{
+    _iconLargeURL = iconLargeURL;
+    [self downloadImageAsync:iconLargeURL completion:^(UIImage *image) {
+        self.iconLarge = image;
+        if(self.largeIconLoaded)
+        {
+            self.largeIconLoaded();
+        }
+    }];
+}
 
 -(void)setPhoneScreenshotURLs:(NSArray *)phoneScreenshotURLs
 {
