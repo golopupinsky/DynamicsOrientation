@@ -8,6 +8,7 @@
 
 #import "MotionDynamicsView.h"
 #import <CoreMotion/CoreMotion.h>
+#import "EntityView.h"
 
 @implementation MotionDynamicsView
 {
@@ -52,12 +53,11 @@
 -(void)fixPositions
 {
     CGRect screen = [UIScreen mainScreen].bounds;
-    float screenMinY = CGRectGetMinY(screen);
-    
-    for (UIView* i in _gravity.items) {
-        float y = CGRectGetMinY( i.frame );
-        if ( abs( y - screenMinY ) > 5000 ) {
 
+    for (UIView* i in _gravity.items) {
+        CGRect rectToTest = CGRectInset(i.frame,CGRectGetWidth(i.frame)/2, CGRectGetHeight(i.frame)/2);
+        
+        if (!CGRectContainsRect(screen,  rectToTest)) {
             [self removeItem:i];
             i.frame = CGRectMake(CGRectGetWidth(screen)/2, CGRectGetHeight(screen)/2, CGRectGetWidth(i.bounds), CGRectGetHeight(i.bounds));
             [self addItem:i];
@@ -68,8 +68,6 @@
 
 -(void)removeItem:(UIView*)i
 {
-    [i removeFromSuperview];
-    
     [_gravity removeItem:i];
     [_collision removeItem:i];
     [_rotationRestrict removeItem:i];
@@ -77,8 +75,6 @@
 
 -(void)addItem:(UIView*)i
 {
-    [self insertSubview:i atIndex:[self.subviews count] ];
-
     [_gravity addItem:i];
     [_collision addItem:i];
     [_rotationRestrict addItem:i];
@@ -92,20 +88,14 @@
     {
         NSUInteger sz = CGRectGetWidth([UIScreen mainScreen].bounds) * CGRectGetHeight([UIScreen mainScreen].bounds) / MAX(5,_totalCount);
         sz = MIN(80, sz);
-        UIImageView *square = [[UIImageView alloc]initWithFrame:CGRectMake(drand48() * 500,
-                                                                           drand48() * 500,
-                                                                           sz,
-                                                                           sz)];
+        EntityView *square = [[EntityView alloc] initWithImage:images[i]
+                                                frame:CGRectMake(drand48() * 500,drand48() * 500, sz, sz)];
         square.layer.masksToBounds = YES;
-        square.image = images[i];
         square.layer.cornerRadius = CGRectGetWidth(square.bounds)/5;
-        
         square.backgroundColor = [UIColor grayColor];
-
+        [self insertSubview:square atIndex:[self.subviews count] ];
         [self addItem:square];
     }
-
-
 }
 
 -(void)processMotion:(NSNotification*)notification

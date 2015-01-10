@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		580BEF3B1A066BED00835FF2 /* MotionDynamicsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 580BEF3A1A066BED00835FF2 /* MotionDynamicsView.m */; };
+		5817D22E1A613DE3008C2E41 /* EntityView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5817D22D1A613DE3008C2E41 /* EntityView.m */; };
 		5897335A1A5D983000F94C4A /* StoreEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 589733591A5D983000F94C4A /* StoreEntity.m */; };
 		58A0C8C11A0568E30099A4FF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A0C8C01A0568E30099A4FF /* main.m */; };
 		58A0C8C41A0568E30099A4FF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A0C8C31A0568E30099A4FF /* AppDelegate.m */; };
@@ -24,6 +25,8 @@
 		433F96C983AF09E75705129C /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		580BEF391A066BED00835FF2 /* MotionDynamicsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MotionDynamicsView.h; sourceTree = "<group>"; };
 		580BEF3A1A066BED00835FF2 /* MotionDynamicsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MotionDynamicsView.m; sourceTree = "<group>"; };
+		5817D22C1A613DE3008C2E41 /* EntityView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EntityView.h; sourceTree = "<group>"; };
+		5817D22D1A613DE3008C2E41 /* EntityView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EntityView.m; sourceTree = "<group>"; };
 		589733581A5D983000F94C4A /* StoreEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StoreEntity.h; sourceTree = "<group>"; };
 		589733591A5D983000F94C4A /* StoreEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StoreEntity.m; sourceTree = "<group>"; };
 		58A0C8BB1A0568E30099A4FF /* DynamicsOrientation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DynamicsOrientation.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -88,6 +91,8 @@
 				580BEF3A1A066BED00835FF2 /* MotionDynamicsView.m */,
 				589733581A5D983000F94C4A /* StoreEntity.h */,
 				589733591A5D983000F94C4A /* StoreEntity.m */,
+				5817D22C1A613DE3008C2E41 /* EntityView.h */,
+				5817D22D1A613DE3008C2E41 /* EntityView.m */,
 			);
 			path = DynamicsOrientation;
 			sourceTree = "<group>";
@@ -229,6 +234,7 @@
 				58A0C8C71A0568E30099A4FF /* ViewController.m in Sources */,
 				58A0C8C41A0568E30099A4FF /* AppDelegate.m in Sources */,
 				58A0C8C11A0568E30099A4FF /* main.m in Sources */,
+				5817D22E1A613DE3008C2E41 /* EntityView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

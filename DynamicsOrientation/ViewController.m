@@ -60,7 +60,7 @@
 //            return;
 //        }
         
-        for (StoreEntity *entity in self.entities)
+        for (StoreEntity *entity in mappingResult.array)
         {
             __weak typeof(entity) weakEntity = entity;
             entity.mediumIconLoaded = ^{
