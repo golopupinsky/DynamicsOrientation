@@ -18,7 +18,7 @@
 @property(nonatomic) NSURL *iconMediumURL;
 @property(nonatomic) NSURL *iconLargeURL;
 @property(nonatomic) NSString *artistName;
-@property(nonatomic) float price;
+@property(nonatomic) CGFloat price;
 @property(nonatomic) NSString *formattedPrice;
 @property(nonatomic) NSString *version;
 @property(nonatomic) NSString *desc;

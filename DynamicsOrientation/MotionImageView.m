@@ -10,8 +10,6 @@
 #import <CoreMotion/CoreMotion.h>
 
 @implementation MotionImageView
-{
-}
 
 - (instancetype)initWithCoder:(NSCoder *)coder
 {

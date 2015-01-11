@@ -20,28 +20,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "DynamicsOrientation/EntityView.m"
-            timestampString = "442583137.665619"
+            timestampString = "442606017.370138"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "21"
-            endingLineNumber = "21"
-            landmarkName = "-initWithImage:frame:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "DynamicsOrientation/EntityView.m"
-            timestampString = "442584023.794027"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "45"
-            endingLineNumber = "45"
-            landmarkName = "-touchesEnded:withEvent:"
+            startingLineNumber = "30"
+            endingLineNumber = "30"
+            landmarkName = "-initWithImage:frame:behaviours:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

@@ -10,6 +10,6 @@
 
 @interface EntityView : UIView
 
--(instancetype)initWithImage:(UIImage*)image frame:(CGRect)frame;
+-(instancetype)initWithImage:(UIImage*)image frame:(CGRect)frame behaviours:(NSArray*)behaviours;
 
 @end
