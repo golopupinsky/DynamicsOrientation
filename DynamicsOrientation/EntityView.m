@@ -40,7 +40,7 @@ static const CGFloat EXPANDED_SIZE = 400.0;
 -(void)initImageViews:(UIImage*)image
 {
     //setting up background
-    NSOperation op = [[NSOperation alloc]init]
+//    NSOperation op = [[NSOperation alloc]init]
     UIImage *blurredImage = [image applyBlurWithRadius:40
                                     tintColor:[UIColor colorWithWhite:0.5 alpha:0.4]
                                     saturationDeltaFactor:1.8
