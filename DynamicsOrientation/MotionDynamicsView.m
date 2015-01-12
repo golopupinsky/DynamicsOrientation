@@ -89,9 +89,10 @@
         NSUInteger sz = CGRectGetWidth([UIScreen mainScreen].bounds) * CGRectGetHeight([UIScreen mainScreen].bounds) / MAX(5,_totalCount);
         sz = MIN(80, sz);
         EntityView *square = [[EntityView alloc] initWithImage:images[i]
-                                                frame:CGRectMake(drand48() * 500,drand48() * 500, sz, sz)
-                                                    behaviours:@[_gravity,_collision,_rotationRestrict]];
-        [self insertSubview:square atIndex:[self.subviews count] ];
+                                                frame:CGRectMake(drand48() * 500, drand48() * 500, sz, sz)
+                                                    behaviours:@[_gravity, _collision, _rotationRestrict]];
+        [self addSubview:square];
+//        [self insertSubview:square atIndex:[self.subviews count] ];
         [self addItem:square];
     }
 }
