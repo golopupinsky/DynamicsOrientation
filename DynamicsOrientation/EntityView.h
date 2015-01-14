@@ -12,5 +12,6 @@
 @interface EntityView : UIView
 
 -(instancetype)initWithEntity:(StoreEntity*)entity frame:(CGRect)frame behaviours:(NSArray*)behaviours;
+-(void)popIn;
 
 @end

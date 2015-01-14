@@ -54,7 +54,7 @@
 {
     CGRect screen = [UIScreen mainScreen].bounds;
 
-    for (UIView* i in _gravity.items) {
+    for (EntityView* i in _gravity.items) {
         CGRect rectToTest = CGRectInset(i.frame,CGRectGetWidth(i.frame)/2, CGRectGetHeight(i.frame)/2);
         
         if (!CGRectContainsRect(screen,  rectToTest)) {
@@ -64,6 +64,7 @@
                                  CGRectGetWidth(i.bounds),
                                  CGRectGetHeight(i.bounds));
             [self addItem:i];
+            [i popIn];
         }
     }
 }

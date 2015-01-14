@@ -32,6 +32,7 @@ static const CGFloat EXPANDED_SIZE = 400.0;
         behaviours = behs;
         [self initSelf:frame];
         [self initImageViews:entity];
+        [self popIn];
     }
     
     return self;
@@ -90,19 +91,23 @@ static const CGFloat EXPANDED_SIZE = 400.0;
     containerHeight = [NSLayoutConstraint constraintWithItem:container attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:CGRectGetHeight(CGRectZero)];
     [container addConstraints:@[containerWidth,containerHeight]];
     
-    POPBasicAnimation *layoutAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
-    layoutAnimation.beginTime = CACurrentMediaTime() + 0.2;//overcoming ugly poping for a moment in top corner
-    layoutAnimation.toValue = @( CGRectGetWidth(frame) );
-    [containerWidth pop_addAnimation:layoutAnimation forKey:@"containerWidthInit"];
-    [containerHeight pop_addAnimation:layoutAnimation forKey:@"containerHeightInit"];
-
-    
     NSLayoutConstraint *selfWidth = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:CGRectGetWidth(self.frame)];
     NSLayoutConstraint *selfHeight = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:CGRectGetHeight(self.frame)];
     [self addConstraints:@[selfWidth,selfHeight]];
 
     initialSize = CGRectGetWidth(self.frame);
     isExpanded = false;
+}
+
+-(void)popIn
+{
+    containerWidth.constant = containerHeight.constant = 0;
+    
+    POPBasicAnimation *layoutAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
+    layoutAnimation.beginTime = CACurrentMediaTime() + 0.2;//overcoming ugly poping for a moment in top corner
+    layoutAnimation.toValue = @( CGRectGetWidth(self.frame) );
+    [containerWidth pop_addAnimation:layoutAnimation forKey:@"containerWidthInit"];
+    [containerHeight pop_addAnimation:layoutAnimation forKey:@"containerHeightInit"];
 }
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
