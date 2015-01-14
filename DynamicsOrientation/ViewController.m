@@ -12,7 +12,7 @@
 #import "StoreEntity.h"
 #import <QuartzCore/CAAnimation.h>
 
-static const CGFloat ADDITION_DELAY = 1.5;
+static const CGFloat ADDITION_DELAY = 1.0;
 
 @interface ViewController ()
     @property(nonatomic, strong) NSMutableArray *entities;

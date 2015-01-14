@@ -30,7 +30,7 @@ static const CGFloat EXPANDED_SIZE = 400.0;
     if(self)
     {
         behaviours = behs;
-        [self initSelf];
+        [self initSelf:frame];
         [self initImageViews:entity];
     }
     
@@ -68,7 +68,7 @@ static const CGFloat EXPANDED_SIZE = 400.0;
     iconView.layer.cornerRadius = CGRectGetWidth(self.bounds)/5;
 }
 
--(void)initSelf
+-(void)initSelf:(CGRect)frame
 {
     self.layer.masksToBounds = YES;
     self.layer.cornerRadius = CGRectGetWidth(self.bounds)/5;
@@ -86,9 +86,16 @@ static const CGFloat EXPANDED_SIZE = 400.0;
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapped:)];
     [container addGestureRecognizer:tapGesture];
     
-    containerWidth = [NSLayoutConstraint constraintWithItem:container attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:CGRectGetWidth(self.frame)];
-    containerHeight = [NSLayoutConstraint constraintWithItem:container attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:CGRectGetHeight(self.frame)];
+    containerWidth = [NSLayoutConstraint constraintWithItem:container attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:CGRectGetWidth(CGRectZero)];
+    containerHeight = [NSLayoutConstraint constraintWithItem:container attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:CGRectGetHeight(CGRectZero)];
     [container addConstraints:@[containerWidth,containerHeight]];
+    
+    POPBasicAnimation *layoutAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
+    layoutAnimation.beginTime = CACurrentMediaTime() + 0.2;//overcoming ugly poping for a moment in top corner
+    layoutAnimation.toValue = @( CGRectGetWidth(frame) );
+    [containerWidth pop_addAnimation:layoutAnimation forKey:@"containerWidthInit"];
+    [containerHeight pop_addAnimation:layoutAnimation forKey:@"containerHeightInit"];
+
     
     NSLayoutConstraint *selfWidth = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:CGRectGetWidth(self.frame)];
     NSLayoutConstraint *selfHeight = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:CGRectGetHeight(self.frame)];
@@ -159,8 +166,8 @@ static const CGFloat EXPANDED_SIZE = 400.0;
         isExpanded = !isExpanded;
     };
     
-    [containerWidth pop_addAnimation:layoutAnimation forKey:@"selfWidth"];
-    [containerHeight pop_addAnimation:layoutAnimation forKey:@"selfHeight"];
+    [containerWidth pop_addAnimation:layoutAnimation forKey:@"containerWidthChange"];
+    [containerHeight pop_addAnimation:layoutAnimation forKey:@"containerHeightChange"];
 }
 
 @end
