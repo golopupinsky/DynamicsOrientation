@@ -7,9 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "StoreEntity.h"
 
 @interface EntityView : UIView
 
--(instancetype)initWithImage:(UIImage*)image frame:(CGRect)frame behaviours:(NSArray*)behaviours;
+-(instancetype)initWithEntity:(StoreEntity*)entity frame:(CGRect)frame behaviours:(NSArray*)behaviours;
 
 @end

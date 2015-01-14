@@ -59,7 +59,10 @@
         
         if (!CGRectContainsRect(screen,  rectToTest)) {
             [self removeItem:i];
-            i.frame = CGRectMake(CGRectGetWidth(screen)/2, CGRectGetHeight(screen)/2, CGRectGetWidth(i.bounds), CGRectGetHeight(i.bounds));
+            i.frame = CGRectMake(CGRectGetWidth(screen)/2 - CGRectGetWidth(i.bounds)/2,
+                                 CGRectGetHeight(screen)/2 - CGRectGetHeight(i.bounds)/2,
+                                 CGRectGetWidth(i.bounds),
+                                 CGRectGetHeight(i.bounds));
             [self addItem:i];
         }
     }
@@ -80,19 +83,24 @@
     [_rotationRestrict addItem:i];
 }
 
--(void) addSubviewsWithImages:(NSArray*)images totalCount:(NSUInteger)count;
+-(void) addSubviewsWithEntities:(NSArray*)entities totalCount:(NSUInteger)count;
 {
     _totalCount = count;
     
-    for(int i=0; i< [images count]; i++)
+    for(int i=0; i< [entities count]; i++)
     {
         NSUInteger sz = CGRectGetWidth([UIScreen mainScreen].bounds) * CGRectGetHeight([UIScreen mainScreen].bounds) / MAX(5,_totalCount);
         sz = MIN(80, sz);
-        EntityView *square = [[EntityView alloc] initWithImage:images[i]
-                                                frame:CGRectMake(drand48() * 500, drand48() * 500, sz, sz)
+        
+        CGRect screen = [UIScreen mainScreen].bounds;
+
+        EntityView *square = [[EntityView alloc] initWithEntity:entities[i]
+                                                frame:CGRectMake(CGRectGetWidth(screen)/2 - sz/2,
+                                                                 CGRectGetHeight(screen)/2 - sz/2,
+                                                                 sz,
+                                                                 sz)
                                                     behaviours:@[_gravity, _collision, _rotationRestrict]];
         [self addSubview:square];
-//        [self insertSubview:square atIndex:[self.subviews count] ];
         [self addItem:square];
     }
 }

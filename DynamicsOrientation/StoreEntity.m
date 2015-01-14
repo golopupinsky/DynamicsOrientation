@@ -8,9 +8,12 @@
 
 #import "StoreEntity.h"
 #import <UIKit/UIKit.h>
+#import "UIImage+ImageEffects.h"
 
 @implementation StoreEntity
-
+{
+    ImagesLoadingStatus imagesLoaded;
+}
 +(NSDictionary*)attributeMapping
 {
     return
@@ -36,10 +39,8 @@
     
     [self downloadImageAsync:iconSmallURL completion:^(UIImage *image) {
         self.iconSmall = image;
-        if(self.smallIconLoaded != nil)
-        {
-            self.smallIconLoaded();
-        }
+        imagesLoaded |= iconSmall;
+        [self attemptImagesCompletionBlock];
     }];
 }
 
@@ -49,10 +50,13 @@
     
     [self downloadImageAsync:iconMediumURL completion:^(UIImage *image) {
         self.iconMedium = image;
-        if(self.mediumIconLoaded)
-        {
-            self.mediumIconLoaded();
-        }
+        
+        self.blurredIcon = [image   applyBlurWithRadius:40
+                                    tintColor:[UIColor colorWithWhite:0.5 alpha:0.4]
+                                    saturationDeltaFactor:1.8
+                                    maskImage:nil];
+        imagesLoaded |= iconMedium;
+        [self attemptImagesCompletionBlock];
     }];
 }
 
@@ -61,10 +65,8 @@
     _iconLargeURL = iconLargeURL;
     [self downloadImageAsync:iconLargeURL completion:^(UIImage *image) {
         self.iconLarge = image;
-        if(self.largeIconLoaded)
-        {
-            self.largeIconLoaded();
-        }
+        imagesLoaded |= iconLarge;
+        [self attemptImagesCompletionBlock];
     }];
 }
 
@@ -110,6 +112,13 @@
             block(img);
         }
     }];
+}
+
+-(void)attemptImagesCompletionBlock
+{
+    if (imagesLoaded == allImages && self.imagesLoadCompletion != nil) {
+        self.imagesLoadCompletion();
+    }
 }
 
 @end

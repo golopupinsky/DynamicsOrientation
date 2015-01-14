@@ -10,11 +10,13 @@
 #import "MotionDynamicsView.h"
 #import <RestKit/RestKit.h>
 #import "StoreEntity.h"
+#import <QuartzCore/CAAnimation.h>
+
+static const CGFloat ADDITION_DELAY = 1.5;
 
 @interface ViewController ()
     @property(nonatomic, strong) NSMutableArray *entities;
-    @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loadingIndicator;
-
+    @property(weak, nonatomic) IBOutlet UIActivityIndicatorView *loadingIndicator;
 @end
 
 @implementation ViewController
@@ -26,9 +28,8 @@
     //@"https://itunes.apple.com/search?term=jack+johnson&limit=200"
     
     [self initializeRestkit];
-    [self loadApps];
+    [self loadEntities];
 }
-
 
 -(void)initializeRestkit
 {
@@ -47,7 +48,7 @@
     [RKMIMETypeSerialization registerClass:[RKNSJSONSerialization class] forMIMEType:@"text/javascript"];
 }
 
--(void)loadApps
+-(void)loadEntities
 {
     __block NSUInteger finishedRequests = 0;
     __weak typeof(self) weakSelf = self;
@@ -63,9 +64,9 @@
         for (StoreEntity *entity in mappingResult.array)
         {
             __weak typeof(entity) weakEntity = entity;
-            entity.mediumIconLoaded = ^{
+            entity.imagesLoadCompletion = ^{
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [weakSelf addIcon:weakEntity.iconMedium];
+                    [weakSelf addEntity:weakEntity];
                 });
             };
         }
@@ -75,11 +76,11 @@
     NSString *name = @"yuzepovich";
     
     NSDictionary *queryParams = @{@"term" : name,
-                                  @"media" : @"software"};
+                                  @"media": @"software"};
     
     [[RKObjectManager sharedManager] getObjectsAtPath:@"/search"
                                            parameters:queryParams
-                                              success: requestSuccessfullBlock
+                                              success:requestSuccessfullBlock
                                               failure:^(RKObjectRequestOperation *operation, NSError *error) {
                                                   NSLog(@"Error occured: %@", error);
                                               }];
@@ -88,7 +89,7 @@
                       @"entity": @"iPadSoftware"};
     [[RKObjectManager sharedManager] getObjectsAtPath:@"/search"
                                            parameters:queryParams
-                                              success: requestSuccessfullBlock
+                                              success:requestSuccessfullBlock
                                               failure:^(RKObjectRequestOperation *operation, NSError *error) {
                                                   NSLog(@"Error occured: %@", error);
                                               }];
@@ -96,9 +97,54 @@
 
 
 
--(void)addIcon:(UIImage*)icon
+-(void)addEntity:(StoreEntity*)entity
 {
-    [(MotionDynamicsView*)self.view addSubviewsWithImages: @[icon] totalCount:self.entities.count];
-    [self.loadingIndicator stopAnimating];
+    static NSMutableArray *delayedEntities;
+    if(delayedEntities == nil){
+        delayedEntities = [[NSMutableArray alloc]init];
+    }
+    [delayedEntities addObject:entity];
+    
+    static NSTimeInterval lastAdditionTime = 0.0;
+    NSTimeInterval now = CACurrentMediaTime();
+    if (lastAdditionTime < 0.0001 || (now - lastAdditionTime) > ADDITION_DELAY) {
+
+        [self performEntitiesAddition:delayedEntities withDelay:0];
+        lastAdditionTime = now;
+    }
+    else
+    {
+        CGFloat delay = ADDITION_DELAY * 1.5;
+        [self performEntitiesAddition:delayedEntities withDelay:delay];
+        lastAdditionTime = now+delay;
+
+
+//        __weak __typeof__(self) weakSelf = self;
+//        void (^delayedAdditionBlock)(void) = ^void(void)
+//        {
+//            if (lastAdditionTime < 0.0001 || (now - lastAdditionTime) > ADDITION_DELAY) {
+//                [weakSelf performEntitiesAddition:delayedEntities withDelay:0];
+//                lastAdditionTime = now;
+//            }
+//            else
+//            {
+//            }
+//        };
+//        
+//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC)), dispatch_get_main_queue(), delayedAdditionBlock);
+    }
+    
 }
+
+-(void)performEntitiesAddition:(NSMutableArray *)entities withDelay:(NSTimeInterval)delay
+{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.loadingIndicator stopAnimating];
+        [(MotionDynamicsView*)self.view addSubviewsWithEntities: entities totalCount:self.entities.count];
+        [entities removeAllObjects];
+        
+    });
+
+}
+
 @end

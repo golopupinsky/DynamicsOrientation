@@ -9,6 +9,15 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+typedef enum : NSUInteger {
+    iconSmall           =   (1 << 0),
+    iconMedium          =   (1 << 1),
+    iconLarge           =   (1 << 2),
+//    phoneScreenshots    =   (1 << 3),
+//    padScreenshots      =   (1 << 4),
+    allImages           =   iconSmall|iconMedium|iconLarge
+} ImagesLoadingStatus;
+
 @interface StoreEntity : NSObject
 
 @property(nonatomic) NSUInteger ID;
@@ -28,13 +37,12 @@
 @property(nonatomic) UIImage *iconSmall;
 @property(nonatomic) UIImage *iconMedium;
 @property(nonatomic) UIImage *iconLarge;
+@property(nonatomic) UIImage *blurredIcon;
 
 @property(nonatomic) NSMutableArray *phoneScreenshots;
 @property(nonatomic) NSMutableArray *tabletScreenshots;
 
-@property (nonatomic, copy) void (^smallIconLoaded)(void);
-@property (nonatomic, copy) void (^mediumIconLoaded)(void);
-@property (nonatomic, copy) void (^largeIconLoaded)(void);
+@property (nonatomic, copy) void (^imagesLoadCompletion)(void);
 
 +(NSDictionary*)attributeMapping;
 

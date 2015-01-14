@@ -10,6 +10,6 @@
 
 @interface MotionDynamicsView : UIView
 
--(void) addSubviewsWithImages:(NSArray*)images totalCount:(NSUInteger)count;
+-(void) addSubviewsWithEntities:(NSArray*)entities totalCount:(NSUInteger)count;
 
 @end

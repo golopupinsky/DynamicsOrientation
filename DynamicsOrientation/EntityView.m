@@ -9,7 +9,7 @@
 #import "EntityView.h"
 #import <pop/POP.h>
 #import <QuartzCore/QuartzCore.h>
-#import "UIImage+ImageEffects.h"
+
 static const CGFloat EXPANDED_SIZE = 400.0;
 
 @implementation EntityView
@@ -24,56 +24,34 @@ static const CGFloat EXPANDED_SIZE = 400.0;
     NSArray *behaviours;
 }
 
--(instancetype)initWithImage:(UIImage*)image frame:(CGRect)frame behaviours:(NSArray*)behs
+-(instancetype)initWithEntity:(StoreEntity*)entity frame:(CGRect)frame behaviours:(NSArray*)behs
 {
     self = [super initWithFrame:frame];
     if(self)
     {
         behaviours = behs;
         [self initSelf];
-        [self initImageViews:image];
+        [self initImageViews:entity];
     }
     
     return self;
 }
 
--(void)initImageViews:(UIImage*)image
+-(void)initImageViews:(StoreEntity*)entity
 {
     //setting up background
-//    NSOperation op = [[NSOperation alloc]init]
-    UIImage *blurredImage = [image applyBlurWithRadius:40
-                                    tintColor:[UIColor colorWithWhite:0.5 alpha:0.4]
-                                    saturationDeltaFactor:1.8
-                                    maskImage:nil];
-    
-    backgroundView = [[UIImageView alloc]initWithImage:blurredImage];
-    [backgroundView setFrame:self.frame];
+    backgroundView = [[UIImageView alloc]initWithFrame:self.frame];
+    backgroundView.image = entity.blurredIcon;
     backgroundView.translatesAutoresizingMaskIntoConstraints = NO;
     [container addSubview: backgroundView];
-
+    
     //background constraints
     NSLayoutConstraint *backgroundCenteredX = [NSLayoutConstraint constraintWithItem:backgroundView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:container attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0.0];
     NSLayoutConstraint *backgroundCenteredY = [NSLayoutConstraint constraintWithItem:backgroundView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:container attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0];
     [container addConstraints:@[backgroundCenteredX,backgroundCenteredY]];
-
-//    //setting up blur
-//    UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
-//    UIVisualEffectView *blurview = [[UIVisualEffectView alloc]initWithEffect:blurEffect];
-//    [container addSubview:blurview];
-//    blurview.frame = self.frame;
-//    blurview.alpha = 0.8;
-//    blurview.translatesAutoresizingMaskIntoConstraints = NO;
-//    //blur constraints
-//    NSLayoutConstraint *blurCenterX = [NSLayoutConstraint constraintWithItem:blurview attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:container attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0.0];
-//    NSLayoutConstraint *blurCenterY = [NSLayoutConstraint constraintWithItem:blurview attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:container attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0];
-//    NSLayoutConstraint *blurTop = [NSLayoutConstraint constraintWithItem:blurview attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:container attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0];
-//    NSLayoutConstraint *blurBottom = [NSLayoutConstraint constraintWithItem:blurview attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:container attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0];
-//    NSLayoutConstraint *blurLeft = [NSLayoutConstraint constraintWithItem:blurview attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:container attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0.0];
-//    NSLayoutConstraint *blurRight = [NSLayoutConstraint constraintWithItem:blurview attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:container attribute:NSLayoutAttributeRight multiplier:1.0 constant:0.0];
-//    [container addConstraints:@[blurCenterX,blurCenterY,blurTop,blurBottom,blurLeft,blurRight]];
     
     //setting up icon
-    iconView = [[UIImageView alloc]initWithImage:image];
+    iconView = [[UIImageView alloc]initWithImage:entity.iconMedium];
     [iconView setFrame:self.frame];
     [container addSubview: iconView];
     iconView.translatesAutoresizingMaskIntoConstraints = NO;
