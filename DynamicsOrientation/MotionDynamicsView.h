@@ -11,5 +11,6 @@
 @interface MotionDynamicsView : UIView
 
 -(void) addSubviewsWithEntities:(NSArray*)entities totalCount:(NSUInteger)count;
+-(void) removeEntities;
 
 @end

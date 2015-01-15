@@ -90,8 +90,8 @@
     
     for(int i=0; i< [entities count]; i++)
     {
-        NSUInteger sz = CGRectGetWidth([UIScreen mainScreen].bounds) * CGRectGetHeight([UIScreen mainScreen].bounds) / MAX(5,_totalCount);
-        sz = MIN(80, sz);
+        NSUInteger sz = CGRectGetWidth([UIScreen mainScreen].bounds) / MAX(5,_totalCount);
+//        sz = MIN(50, sz);
         
         CGRect screen = [UIScreen mainScreen].bounds;
 
@@ -103,6 +103,15 @@
                                                     behaviours:@[_gravity, _collision, _rotationRestrict]];
         [self addSubview:square];
         [self addItem:square];
+    }
+}
+
+-(void) removeEntities
+{
+    for(UIView *i in _gravity.items)
+    {
+        [self removeItem:i];
+        [i removeFromSuperview];
     }
 }
 

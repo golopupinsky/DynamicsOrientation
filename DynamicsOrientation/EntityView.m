@@ -42,6 +42,7 @@ static const CGFloat EXPANDED_SIZE = 400.0;
 {
     //setting up background
     backgroundView = [[UIImageView alloc]initWithFrame:self.frame];
+    backgroundView.contentMode = UIViewContentModeScaleAspectFill;
     backgroundView.image = entity.blurredIcon;
     backgroundView.translatesAutoresizingMaskIntoConstraints = NO;
     [container addSubview: backgroundView];
@@ -49,7 +50,11 @@ static const CGFloat EXPANDED_SIZE = 400.0;
     //background constraints
     NSLayoutConstraint *backgroundCenteredX = [NSLayoutConstraint constraintWithItem:backgroundView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:container attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0.0];
     NSLayoutConstraint *backgroundCenteredY = [NSLayoutConstraint constraintWithItem:backgroundView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:container attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0];
-    [container addConstraints:@[backgroundCenteredX,backgroundCenteredY]];
+    NSLayoutConstraint *backgroundLeft = [NSLayoutConstraint constraintWithItem:backgroundView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:container attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-80.0];
+    NSLayoutConstraint *backgroundRight = [NSLayoutConstraint constraintWithItem:backgroundView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:container attribute:NSLayoutAttributeRight multiplier:1.0 constant:80.0];
+    NSLayoutConstraint *backgroundTop = [NSLayoutConstraint constraintWithItem:backgroundView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:container attribute:NSLayoutAttributeTop multiplier:1.0 constant:-80.0];
+    NSLayoutConstraint *backgroundBottom = [NSLayoutConstraint constraintWithItem:backgroundView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:container attribute:NSLayoutAttributeBottom multiplier:1.0 constant:80.0];
+    [container addConstraints:@[backgroundCenteredX,backgroundCenteredY,backgroundLeft,backgroundRight,backgroundTop,backgroundBottom]];
     
     //setting up icon
     iconView = [[UIImageView alloc]initWithImage:entity.iconMedium];
@@ -58,12 +63,12 @@ static const CGFloat EXPANDED_SIZE = 400.0;
     iconView.translatesAutoresizingMaskIntoConstraints = NO;
 
     //icon constraints
-    NSLayoutConstraint *centeredX = [NSLayoutConstraint constraintWithItem:iconView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:container attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0.0];
-    NSLayoutConstraint *imageWidth = [NSLayoutConstraint constraintWithItem:iconView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:CGRectGetWidth(iconView.frame)];
-    NSLayoutConstraint *imageHeight = [NSLayoutConstraint constraintWithItem:iconView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:CGRectGetHeight(iconView.frame)];
-    NSLayoutConstraint *top = [NSLayoutConstraint constraintWithItem:iconView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:container attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0];
-    [container addConstraints:@[centeredX,top]];
-    [iconView addConstraints:@[imageWidth,imageHeight]];
+    NSLayoutConstraint *iconCenteredX = [NSLayoutConstraint constraintWithItem:iconView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:container attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0.0];
+    NSLayoutConstraint *iconWidth = [NSLayoutConstraint constraintWithItem:iconView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:CGRectGetWidth(iconView.frame)];
+    NSLayoutConstraint *iconHeight = [NSLayoutConstraint constraintWithItem:iconView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:CGRectGetHeight(iconView.frame)];
+    NSLayoutConstraint *iconTop = [NSLayoutConstraint constraintWithItem:iconView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:container attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0];
+    [container addConstraints:@[iconCenteredX,iconTop]];
+    [iconView addConstraints:@[iconWidth,iconHeight]];
 
     iconView.layer.masksToBounds = YES;
     iconView.layer.cornerRadius = CGRectGetWidth(self.bounds)/5;
@@ -140,9 +145,7 @@ static const CGFloat EXPANDED_SIZE = 400.0;
         centerAnimation.toValue = [NSValue valueWithCGRect:rect];
         [self pop_addAnimation:centerAnimation forKey:@"centerExpand"];
 
-
         self.layer.zPosition = MAXFLOAT;//the only working way of making view topmost
-
     }
     else
     {

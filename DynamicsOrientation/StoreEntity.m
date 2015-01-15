@@ -22,7 +22,7 @@
       @"ipadScreenshotUrls":@"tabletScreenshotURLs",
       @"artworkUrl60":@"iconSmallURL",
       @"artworkUrl100":@"iconMediumURL",
-      @"artworkUrl512":@"iconLargeURL",
+//      @"artworkUrl512":@"iconLargeURL",
       @"artistName":@"artistName",
       @"price":@"price",
       @"formattedPrice":@"formattedPrice",
@@ -39,6 +39,11 @@
     
     [self downloadImageAsync:iconSmallURL completion:^(UIImage *image) {
         self.iconSmall = image;
+        self.blurredIcon = [image   applyBlurWithRadius:5/*40*/
+                                    tintColor:[UIColor colorWithWhite:0.5 alpha:0.4]
+                                    saturationDeltaFactor:1.8
+                                    maskImage:nil];
+
         imagesLoaded |= iconSmall;
         [self attemptImagesCompletionBlock];
     }];
@@ -50,25 +55,20 @@
     
     [self downloadImageAsync:iconMediumURL completion:^(UIImage *image) {
         self.iconMedium = image;
-        
-        self.blurredIcon = [image   applyBlurWithRadius:40
-                                    tintColor:[UIColor colorWithWhite:0.5 alpha:0.4]
-                                    saturationDeltaFactor:1.8
-                                    maskImage:nil];
         imagesLoaded |= iconMedium;
         [self attemptImagesCompletionBlock];
     }];
 }
 
--(void)setIconLargeURL:(NSURL *)iconLargeURL
-{
-    _iconLargeURL = iconLargeURL;
-    [self downloadImageAsync:iconLargeURL completion:^(UIImage *image) {
-        self.iconLarge = image;
-        imagesLoaded |= iconLarge;
-        [self attemptImagesCompletionBlock];
-    }];
-}
+//-(void)setIconLargeURL:(NSURL *)iconLargeURL
+//{
+//    _iconLargeURL = iconLargeURL;
+//    [self downloadImageAsync:iconLargeURL completion:^(UIImage *image) {
+//        self.iconLarge = image;
+//        imagesLoaded |= iconLarge;
+//        [self attemptImagesCompletionBlock];
+//    }];
+//}
 
 -(void)setPhoneScreenshotURLs:(NSArray *)phoneScreenshotURLs
 {
@@ -107,7 +107,7 @@
     [NSURLConnection sendAsynchronousRequest:request queue:queue completionHandler:
     ^(NSURLResponse *response, NSData *data, NSError *connectionError) {
         UIImage *img = [UIImage imageWithData:data];
-        if(block)
+        if(connectionError == nil && block != nil)
         {
             block(img);
         }

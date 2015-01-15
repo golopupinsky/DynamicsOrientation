@@ -14,15 +14,14 @@
 #import <pop/POP.h>
 
 static const CGFloat ADDITION_DELAY = 1.0;
+static NSString *LAST_QUERY = @"LAST_QUERY";
 
-@interface ViewController ()
+@interface ViewController ()<UITextFieldDelegate>
     @property(nonatomic, strong) NSMutableArray *entities;
     @property(weak, nonatomic) IBOutlet UIActivityIndicatorView *loadingIndicator;
     @property (weak, nonatomic) IBOutlet UIView *searchView;
     @property (weak, nonatomic) IBOutlet UITextField *searchTextView;
     @property (weak, nonatomic) IBOutlet NSLayoutConstraint *searchViewTopConstraint;
-
-
 @end
 
 @implementation ViewController
@@ -33,7 +32,8 @@ static const CGFloat ADDITION_DELAY = 1.0;
 
     //@"https://itunes.apple.com/search?term=jack+johnson&limit=200"
     
-    self.searchTextView.text = @"sergey yuzepovich";
+    self.searchTextView.delegate = self;
+    self.searchTextView.text = [self fetchLastSearchQuery];
     
     [self initializeRestkit];
     [self loadEntities];
@@ -44,6 +44,22 @@ static const CGFloat ADDITION_DELAY = 1.0;
     
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(pan:)];
     [self.view addGestureRecognizer:panGesture];
+}
+
+-(NSString*)fetchLastSearchQuery
+{
+    NSString *lastQuery = (NSString*)[[NSUserDefaults standardUserDefaults] objectForKey:LAST_QUERY];
+    if (lastQuery == nil) {
+        lastQuery = @"sergey yuzepovich";
+    }
+    
+    return lastQuery;
+}
+
+-(void)storeLastSearchQuery:(NSString*)query
+{
+    [[NSUserDefaults standardUserDefaults] setObject:query forKey:LAST_QUERY];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 -(void)initializeRestkit
@@ -65,16 +81,19 @@ static const CGFloat ADDITION_DELAY = 1.0;
 
 -(void)loadEntities
 {
+    [(MotionDynamicsView*)self.view removeEntities];
+    [self.loadingIndicator startAnimating];
+    
     __block NSUInteger finishedRequests = 0;
     __weak typeof(self) weakSelf = self;
     void (^requestSuccessfullBlock)(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) =
     ^void(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
         [weakSelf.entities addObjectsFromArray: mappingResult.array];
 
-//        if (finishedRequests == 0) {
-//            finishedRequests++;
-//            return;
-//        }
+        if (finishedRequests == 0) {//this is needed because of two passes
+            finishedRequests++;
+            return;
+        }
         
         for (StoreEntity *entity in mappingResult.array)
         {
@@ -97,6 +116,7 @@ static const CGFloat ADDITION_DELAY = 1.0;
                                               failure:^(RKObjectRequestOperation *operation, NSError *error) {
                                                   NSLog(@"Error occured: %@", error);
                                               }];
+    
     queryParams = @{@"term" : self.searchTextView.text,
                       @"media" : @"software",
                       @"entity": @"iPadSoftware"};
@@ -106,6 +126,8 @@ static const CGFloat ADDITION_DELAY = 1.0;
                                               failure:^(RKObjectRequestOperation *operation, NSError *error) {
                                                   NSLog(@"Error occured: %@", error);
                                               }];
+    
+    [self storeLastSearchQuery:self.searchTextView.text];
 }
 
 
@@ -131,7 +153,6 @@ static const CGFloat ADDITION_DELAY = 1.0;
         [self performEntitiesAddition:delayedEntities withDelay:delay];
         lastAdditionTime = now+delay;
     }
-    
 }
 
 -(void)performEntitiesAddition:(NSMutableArray *)entities withDelay:(NSTimeInterval)delay
@@ -140,7 +161,7 @@ static const CGFloat ADDITION_DELAY = 1.0;
         [self.loadingIndicator stopAnimating];
         [(MotionDynamicsView*)self.view addSubviewsWithEntities: entities totalCount:self.entities.count];
         [entities removeAllObjects];
-        
+        [self.view bringSubviewToFront: self.searchView.superview];
     });
 }
 
@@ -149,6 +170,8 @@ static const CGFloat ADDITION_DELAY = 1.0;
     POPBasicAnimation *layoutAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
     layoutAnimation.toValue = @( -CGRectGetHeight(self.searchView.frame) );
     [self.searchViewTopConstraint pop_addAnimation:layoutAnimation forKey:@"searchDismiss"];
+    
+    [self.searchTextView resignFirstResponder];
 }
 
 -(void)presentSearchView
@@ -182,4 +205,18 @@ static const CGFloat ADDITION_DELAY = 1.0;
         }
     }
 }
+
+-(BOOL) textFieldShouldReturn:(UITextField *)textField{
+    
+    [self.searchTextView resignFirstResponder];
+    
+    [self loadEntities];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self dismissSearchView];
+    });
+    
+    return YES;
+}
+
 @end
