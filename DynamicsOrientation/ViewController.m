@@ -37,13 +37,6 @@ static NSString *LAST_QUERY = @"LAST_QUERY";
     
     [self initializeRestkit];
     [self loadEntities];
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self dismissSearchView];
-    });
-    
-    UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(pan:)];
-    [self.view addGestureRecognizer:panGesture];
 }
 
 -(NSString*)fetchLastSearchQuery
@@ -84,49 +77,41 @@ static NSString *LAST_QUERY = @"LAST_QUERY";
     [(MotionDynamicsView*)self.view removeEntities];
     [self.loadingIndicator startAnimating];
     
-    __block NSUInteger finishedRequests = 0;
-    __weak typeof(self) weakSelf = self;
     void (^requestSuccessfullBlock)(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) =
     ^void(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-        [weakSelf.entities addObjectsFromArray: mappingResult.array];
-
-        if (finishedRequests == 0) {//this is needed because of two passes
-            finishedRequests++;
-            return;
-        }
-        
-        for (StoreEntity *entity in mappingResult.array)
+        [self.entities addObjectsFromArray: mappingResult.array];
+        for (StoreEntity *entity in self.entities)
         {
             __weak typeof(entity) weakEntity = entity;
             entity.imagesLoadCompletion = ^{
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [weakSelf addEntity:weakEntity];
+                    [self addEntity:weakEntity];
                 });
             };
         }
     };
+    void (^requestFailureBlock)(RKObjectRequestOperation *operation, NSError *error) =
+    ^(RKObjectRequestOperation *operation, NSError *error) {
+        NSLog(@"Error occured: %@", error);
+    };
 
-    
     NSDictionary *queryParams = @{@"term" : self.searchTextView.text,
                                   @"media": @"software"};
     
     [[RKObjectManager sharedManager] getObjectsAtPath:@"/search"
                                            parameters:queryParams
                                               success:requestSuccessfullBlock
-                                              failure:^(RKObjectRequestOperation *operation, NSError *error) {
-                                                  NSLog(@"Error occured: %@", error);
-                                              }];
+                                              failure:requestFailureBlock];
     
-    queryParams = @{@"term" : self.searchTextView.text,
-                      @"media" : @"software",
-                      @"entity": @"iPadSoftware"};
+    NSDictionary *queryParams2 = @{@"term" : self.searchTextView.text,
+                                   @"media" : @"software",
+                                   @"entity": @"iPadSoftware"};
+    
     [[RKObjectManager sharedManager] getObjectsAtPath:@"/search"
-                                           parameters:queryParams
+                                           parameters:queryParams2
                                               success:requestSuccessfullBlock
-                                              failure:^(RKObjectRequestOperation *operation, NSError *error) {
-                                                  NSLog(@"Error occured: %@", error);
-                                              }];
-    
+                                              failure:requestFailureBlock];
+
     [self storeLastSearchQuery:self.searchTextView.text];
 }
 
@@ -134,87 +119,16 @@ static NSString *LAST_QUERY = @"LAST_QUERY";
 
 -(void)addEntity:(StoreEntity*)entity
 {
-    static NSMutableArray *delayedEntities;
-    if(delayedEntities == nil){
-        delayedEntities = [[NSMutableArray alloc]init];
-    }
-    [delayedEntities addObject:entity];
-    
-    static NSTimeInterval lastAdditionTime = 0.0;
-    NSTimeInterval now = CACurrentMediaTime();
-    if (lastAdditionTime < 0.0001 || (now - lastAdditionTime) > ADDITION_DELAY) {
-
-        [self performEntitiesAddition:delayedEntities withDelay:0];
-        lastAdditionTime = now;
-    }
-    else
-    {
-        CGFloat delay = ADDITION_DELAY * 1.5;
-        [self performEntitiesAddition:delayedEntities withDelay:delay];
-        lastAdditionTime = now+delay;
-    }
+    [self.loadingIndicator stopAnimating];
+    [(MotionDynamicsView*)self.view addSubviewsWithEntities: @[entity] totalCount:self.entities.count];
+    [self.view bringSubviewToFront: self.searchView.superview];
 }
 
--(void)performEntitiesAddition:(NSMutableArray *)entities withDelay:(NSTimeInterval)delay
-{
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self.loadingIndicator stopAnimating];
-        [(MotionDynamicsView*)self.view addSubviewsWithEntities: entities totalCount:self.entities.count];
-        [entities removeAllObjects];
-        [self.view bringSubviewToFront: self.searchView.superview];
-    });
-}
-
--(void)dismissSearchView
-{
-    POPBasicAnimation *layoutAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
-    layoutAnimation.toValue = @( -CGRectGetHeight(self.searchView.frame) );
-    [self.searchViewTopConstraint pop_addAnimation:layoutAnimation forKey:@"searchDismiss"];
-    
-    [self.searchTextView resignFirstResponder];
-}
-
--(void)presentSearchView
-{
-    POPBasicAnimation *layoutAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
-    layoutAnimation.toValue = @( 0 );
-    [self.searchViewTopConstraint pop_addAnimation:layoutAnimation forKey:@"searchPresent"];
-}
-
--(void)pan:(UIPanGestureRecognizer*)pan
-{
-    static CGFloat startingTop;
-    CGFloat h = CGRectGetHeight(self.searchView.frame);
-
-    if (pan.state == UIGestureRecognizerStateBegan) {
-        startingTop = self.searchViewTopConstraint.constant;
-    }
-    
-    if (pan.state == UIGestureRecognizerStateChanged) {
-        CGPoint panDistance = [pan translationInView:self.view];
-        self.searchViewTopConstraint.constant = MIN(0, startingTop + panDistance.y);
-    }
-    
-    if(pan.state == UIGestureRecognizerStateEnded || pan.state == UIGestureRecognizerStateFailed || pan.state == UIGestureRecognizerStateCancelled){
-
-        if (self.searchViewTopConstraint.constant < -h/10 ) {
-            [self dismissSearchView];
-        }
-        else{
-            [self presentSearchView];
-        }
-    }
-}
 
 -(BOOL) textFieldShouldReturn:(UITextField *)textField{
     
     [self.searchTextView resignFirstResponder];
-    
     [self loadEntities];
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self dismissSearchView];
-    });
     
     return YES;
 }

@@ -10,7 +10,7 @@
 #import <pop/POP.h>
 #import <QuartzCore/QuartzCore.h>
 
-static const CGFloat EXPANDED_SIZE = 400.0;
+#define EXPANDED_SIZE MIN( CGRectGetWidth([UIScreen mainScreen].bounds)*0.95, 400.0)
 
 @implementation EntityView
 {

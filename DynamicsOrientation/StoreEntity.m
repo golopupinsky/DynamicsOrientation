@@ -107,9 +107,14 @@
     [NSURLConnection sendAsynchronousRequest:request queue:queue completionHandler:
     ^(NSURLResponse *response, NSData *data, NSError *connectionError) {
         UIImage *img = [UIImage imageWithData:data];
-        if(connectionError == nil && block != nil)
+        if(connectionError == nil)
         {
-            block(img);
+            if(block)
+                block(img);
+        }
+        else
+        {
+            NSLog(@"%@",connectionError.localizedDescription);
         }
     }];
 }

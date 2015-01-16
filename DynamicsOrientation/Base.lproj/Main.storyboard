@@ -40,24 +40,35 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="K1s-Ib-lmr" userLabel="searchView">
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="94"/>
                                         <subviews>
-                                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="evZ-Ik-95G">
+                                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="evZ-Ik-95G">
                                                 <rect key="frame" x="8" y="58" width="398" height="29"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="28" id="d4e-UE-opQ"/>
+                                                </constraints>
                                                 <segments>
                                                     <segment title="software"/>
                                                     <segment title="music"/>
                                                     <segment title="podcast"/>
                                                     <segment title="ebook"/>
-                                                    <segment title="audiobook"/>
                                                 </segments>
                                             </segmentedControl>
-                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="search term" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="b0b-XJ-kyC">
+                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="search term" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="b0b-XJ-kyC">
                                                 <rect key="frame" x="8" y="20" width="398" height="30"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="30" id="sjA-Ch-vcr"/>
+                                                </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
                                             </textField>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
+                                            <constraint firstItem="evZ-Ik-95G" firstAttribute="leading" secondItem="K1s-Ib-lmr" secondAttribute="leading" constant="8" id="ID4-Yi-m05"/>
+                                            <constraint firstItem="evZ-Ik-95G" firstAttribute="top" secondItem="b0b-XJ-kyC" secondAttribute="bottom" constant="8" id="JZY-gA-KNp"/>
+                                            <constraint firstAttribute="trailing" secondItem="evZ-Ik-95G" secondAttribute="trailing" constant="8" id="KZs-sF-tlm"/>
+                                            <constraint firstItem="b0b-XJ-kyC" firstAttribute="top" secondItem="K1s-Ib-lmr" secondAttribute="top" constant="20" id="NqV-TU-rgx"/>
+                                            <constraint firstItem="b0b-XJ-kyC" firstAttribute="leading" secondItem="K1s-Ib-lmr" secondAttribute="leading" constant="8" id="YTO-7d-2JJ"/>
+                                            <constraint firstAttribute="trailing" secondItem="b0b-XJ-kyC" secondAttribute="trailing" constant="8" id="mdU-yR-g80"/>
                                             <constraint firstAttribute="height" constant="94" id="zA7-Dq-pWj"/>
                                         </constraints>
                                     </view>
