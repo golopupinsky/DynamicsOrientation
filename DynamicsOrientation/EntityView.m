@@ -14,6 +14,7 @@
 
 @implementation EntityView
 {
+    StoreEntity *entity;
     UIView *container;
     UIImageView *iconView;
     UIImageView *backgroundView;
@@ -24,21 +25,54 @@
     NSArray *behaviours;
 }
 
--(instancetype)initWithEntity:(StoreEntity*)entity frame:(CGRect)frame behaviours:(NSArray*)behs
+-(instancetype)initWithEntity:(StoreEntity*)e frame:(CGRect)frame behaviours:(NSArray*)behs
 {
     self = [super initWithFrame:frame];
     if(self)
     {
+        entity = e;
         behaviours = behs;
         [self initSelf:frame];
-        [self initImageViews:entity];
+        [self initImageViews];
+        [self initLabels];
+        
         [self popIn];
     }
     
     return self;
 }
 
--(void)initImageViews:(StoreEntity*)entity
+-(void)initSelf:(CGRect)frame
+{
+    self.layer.masksToBounds = YES;
+    self.layer.cornerRadius = CGRectGetWidth(self.bounds)/5;
+    self.clipsToBounds = NO;
+    
+    self.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    container = [[UIView alloc]init];
+    container.layer.masksToBounds = YES;
+    container.clipsToBounds = YES;
+    container.layer.cornerRadius = CGRectGetWidth(self.bounds)/5;
+    [self addSubview:container];
+    container.translatesAutoresizingMaskIntoConstraints = NO;
+    container.backgroundColor = [UIColor lightGrayColor];
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapped:)];
+    [container addGestureRecognizer:tapGesture];
+    
+    containerWidth = [NSLayoutConstraint constraintWithItem:container attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:CGRectGetWidth(CGRectZero)];
+    containerHeight = [NSLayoutConstraint constraintWithItem:container attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:CGRectGetHeight(CGRectZero)];
+    [container addConstraints:@[containerWidth,containerHeight]];
+    
+    NSLayoutConstraint *selfWidth = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:CGRectGetWidth(self.frame)];
+    NSLayoutConstraint *selfHeight = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:CGRectGetHeight(self.frame)];
+    [self addConstraints:@[selfWidth,selfHeight]];
+    
+    initialSize = CGRectGetWidth(self.frame);
+    isExpanded = false;
+}
+
+-(void)initImageViews
 {
     //setting up background
     backgroundView = [[UIImageView alloc]initWithFrame:self.frame];
@@ -74,34 +108,95 @@
     iconView.layer.cornerRadius = CGRectGetWidth(self.bounds)/5;
 }
 
--(void)initSelf:(CGRect)frame
+-(void)initLabels
 {
-    self.layer.masksToBounds = YES;
-    self.layer.cornerRadius = CGRectGetWidth(self.bounds)/5;
-    self.clipsToBounds = NO;
+    UILabel *price = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 25)];
+    price.text = entity.formattedPrice;
+    price.textAlignment = NSTextAlignmentCenter;
+    price.translatesAutoresizingMaskIntoConstraints = NO;
+    [container addSubview:price];
     
-    self.translatesAutoresizingMaskIntoConstraints = NO;
+    [container addConstraint:[NSLayoutConstraint constraintWithItem:price
+                                                          attribute:NSLayoutAttributeCenterY
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:iconView
+                                                          attribute:NSLayoutAttributeCenterY
+                                                         multiplier:1.0
+                                                           constant:0.0]];
 
-    container = [[UIView alloc]init];
-    container.layer.masksToBounds = YES;
-    container.clipsToBounds = YES;
-    container.layer.cornerRadius = CGRectGetWidth(self.bounds)/5;
-    [self addSubview:container];
-    container.translatesAutoresizingMaskIntoConstraints = NO;
-    container.backgroundColor = [UIColor lightGrayColor];
-    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapped:)];
-    [container addGestureRecognizer:tapGesture];
+    [container addConstraint:[NSLayoutConstraint constraintWithItem:price
+                                                          attribute:NSLayoutAttributeCenterX
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:container
+                                                          attribute:NSLayoutAttributeCenterX
+                                                         multiplier:0.33
+                                                           constant:0.0]];
     
-    containerWidth = [NSLayoutConstraint constraintWithItem:container attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:CGRectGetWidth(CGRectZero)];
-    containerHeight = [NSLayoutConstraint constraintWithItem:container attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:CGRectGetHeight(CGRectZero)];
-    [container addConstraints:@[containerWidth,containerHeight]];
     
-    NSLayoutConstraint *selfWidth = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:CGRectGetWidth(self.frame)];
-    NSLayoutConstraint *selfHeight = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:CGRectGetHeight(self.frame)];
-    [self addConstraints:@[selfWidth,selfHeight]];
+    UILabel *title = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 25)];
+    title.text = entity.name;
+    title.textAlignment = NSTextAlignmentCenter;
+    title.translatesAutoresizingMaskIntoConstraints = NO;
+    [container addSubview:title];
+    
+    [container addConstraint:[NSLayoutConstraint constraintWithItem:title
+                                                          attribute:NSLayoutAttributeCenterX
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:iconView
+                                                          attribute:NSLayoutAttributeCenterX
+                                                         multiplier:1.0
+                                                           constant:0.0]];
+   
+    [container addConstraint:[NSLayoutConstraint constraintWithItem:title
+                                                          attribute:NSLayoutAttributeTop
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:iconView
+                                                          attribute:NSLayoutAttributeBottom
+                                                         multiplier:1
+                                                           constant:10.0]];
+    
+    [title addConstraint:[NSLayoutConstraint constraintWithItem:title
+                                                            attribute:NSLayoutAttributeWidth
+                                                            relatedBy:NSLayoutRelationEqual
+                                                               toItem:nil
+                                                            attribute:0
+                                                           multiplier:1
+                                                             constant:EXPANDED_SIZE*0.7]];
 
-    initialSize = CGRectGetWidth(self.frame);
-    isExpanded = false;
+
+    UILabel *description = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 25)];
+    description.text = entity.desc;
+    description.textAlignment = NSTextAlignmentCenter;
+    description.numberOfLines = 10;
+    description.translatesAutoresizingMaskIntoConstraints = NO;
+    [container addSubview:description];
+    
+    [container addConstraint:[NSLayoutConstraint constraintWithItem:description
+                                                          attribute:NSLayoutAttributeCenterX
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:iconView
+                                                          attribute:NSLayoutAttributeCenterX
+                                                         multiplier:1.0
+                                                           constant:0.0]];
+
+    [container addConstraint:[NSLayoutConstraint constraintWithItem:description
+                                                          attribute:NSLayoutAttributeTop
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:title
+                                                          attribute:NSLayoutAttributeBottom
+                                                         multiplier:1
+                                                           constant:10.0]];
+    
+    [description addConstraint:[NSLayoutConstraint constraintWithItem:description
+                                                          attribute:NSLayoutAttributeWidth
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:nil
+                                                          attribute:0
+                                                         multiplier:1
+                                                           constant:EXPANDED_SIZE*0.9]];
+    
+    [container bringSubviewToFront:iconView];
+    
 }
 
 -(void)popIn
@@ -109,7 +204,7 @@
     containerWidth.constant = containerHeight.constant = 0;
     
     POPBasicAnimation *layoutAnimation = [POPBasicAnimation animationWithPropertyNamed:kPOPLayoutConstraintConstant];
-    layoutAnimation.beginTime = CACurrentMediaTime() + 0.2;//overcoming ugly poping for a moment in top corner
+//    layoutAnimation.beginTime = CACurrentMediaTime() + 0.2;//overcoming ugly poping for a moment in top corner
     layoutAnimation.toValue = @( CGRectGetWidth(self.frame) );
     [containerWidth pop_addAnimation:layoutAnimation forKey:@"containerWidthInit"];
     [containerHeight pop_addAnimation:layoutAnimation forKey:@"containerHeightInit"];

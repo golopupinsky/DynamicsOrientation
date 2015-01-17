@@ -59,6 +59,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		580E5EE51A6A80D0009F7B79 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		58A0C8B21A0568E30099A4FF = {
 			isa = PBXGroup;
 			children = (
@@ -80,6 +87,7 @@
 		58A0C8BD1A0568E30099A4FF /* DynamicsOrientation */ = {
 			isa = PBXGroup;
 			children = (
+				580E5EE51A6A80D0009F7B79 /* Resources */,
 				58A0C8C21A0568E30099A4FF /* AppDelegate.h */,
 				58A0C8C31A0568E30099A4FF /* AppDelegate.m */,
 				58A0C8C51A0568E30099A4FF /* ViewController.h */,

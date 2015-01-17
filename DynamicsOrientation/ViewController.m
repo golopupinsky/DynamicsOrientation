@@ -13,7 +13,6 @@
 #import <QuartzCore/CAAnimation.h>
 #import <pop/POP.h>
 
-static const CGFloat ADDITION_DELAY = 1.0;
 static NSString *LAST_QUERY = @"LAST_QUERY";
 
 @interface ViewController ()<UITextFieldDelegate>

@@ -9,6 +9,7 @@
 #import "MotionDynamicsView.h"
 #import <CoreMotion/CoreMotion.h>
 #import "EntityView.h"
+#include <stdlib.h>
 
 @implementation MotionDynamicsView
 {
@@ -59,10 +60,12 @@
         
         if (!CGRectContainsRect(screen,  rectToTest)) {
             [self removeItem:i];
-            i.frame = CGRectMake(CGRectGetWidth(screen)/2 - CGRectGetWidth(i.bounds)/2,
-                                 CGRectGetHeight(screen)/2 - CGRectGetHeight(i.bounds)/2,
-                                 CGRectGetWidth(i.bounds),
-                                 CGRectGetHeight(i.bounds));
+
+            CGRect frame = i.frame;
+            CGPoint origin = [self warpInPoint:i.frame];
+            frame.origin = origin;
+            
+            i.frame = frame;
             [self addItem:i];
             [i popIn];
         }
@@ -90,22 +93,38 @@
     
     for(int i=0; i< [entities count]; i++)
     {
-        NSUInteger sz = CGRectGetWidth([UIScreen mainScreen].bounds) / MAX(5,_totalCount);
-//        sz = MIN(50, sz);
         
-        CGRect screen = [UIScreen mainScreen].bounds;
-
+        NSUInteger sz;
+        
+        if(_totalCount <= 10)
+        {
+            sz = 80;
+        }
+        else
+        {
+            sz = CGRectGetWidth([UIScreen mainScreen].bounds) / _totalCount;
+            sz = MAX(40, sz);
+        }
+        
+        CGRect frame = CGRectMake(0,0,sz,sz);
+        frame.origin = [self warpInPoint:frame];
         EntityView *square = [[EntityView alloc] initWithEntity:entities[i]
-                                                frame:CGRectMake(CGRectGetWidth(screen)/2 - sz/2,
-                                                                 CGRectGetHeight(screen)/2 - sz/2,
-                                                                 sz,
-                                                                 sz)
-                                                    behaviours:@[_gravity, _collision, _rotationRestrict]];
+                                                  frame: frame
+                                                 behaviours:@[_gravity, _collision, _rotationRestrict]];
         [self addSubview:square];
         [self addItem:square];
     }
 }
 
+-(CGPoint)warpInPoint:(CGRect)frame
+{
+    CGRect screen = [UIScreen mainScreen].bounds;
+    CGPoint origin = CGPointMake(CGRectGetWidth(screen)/2 - CGRectGetWidth(frame)/2, CGRectGetHeight(screen)/2 - CGRectGetHeight(frame)/2);
+    origin.x += (arc4random_uniform(100)/100.0 - 0.5) * CGRectGetWidth(screen)/2;
+    origin.y += (arc4random_uniform(100)/100.0 - 1) * CGRectGetHeight(screen)/2;
+    
+    return origin;
+}
 -(void) removeEntities
 {
     for(UIView *i in _gravity.items)
