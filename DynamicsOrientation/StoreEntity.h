@@ -12,10 +12,9 @@
 typedef enum : NSUInteger {
     iconSmall           =   (1 << 0),
     iconMedium          =   (1 << 1),
-//    iconLarge           =   (1 << 2),
 //    phoneScreenshots    =   (1 << 3),
 //    padScreenshots      =   (1 << 4),
-    allImages           =   iconSmall|iconMedium//|iconLarge
+    allImages           =   iconSmall|iconMedium
 } ImagesLoadingStatus;
 
 @interface StoreEntity : NSObject
@@ -25,7 +24,6 @@ typedef enum : NSUInteger {
 @property(nonatomic) NSArray *tabletScreenshotURLs;
 @property(nonatomic) NSURL *iconSmallURL;
 @property(nonatomic) NSURL *iconMediumURL;
-//@property(nonatomic) NSURL *iconLargeURL;
 @property(nonatomic) NSString *artistName;
 @property(nonatomic) CGFloat price;
 @property(nonatomic) NSString *formattedPrice;
@@ -37,7 +35,6 @@ typedef enum : NSUInteger {
 
 @property(nonatomic) UIImage *iconSmall;
 @property(nonatomic) UIImage *iconMedium;
-//@property(nonatomic) UIImage *iconLarge;
 @property(nonatomic) UIImage *blurredIcon;
 
 @property(nonatomic) NSMutableArray *phoneScreenshots;

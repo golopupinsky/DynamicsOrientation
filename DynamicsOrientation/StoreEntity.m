@@ -22,7 +22,6 @@
       @"ipadScreenshotUrls":@"tabletScreenshotURLs",
       @"artworkUrl60":@"iconSmallURL",
       @"artworkUrl100":@"iconMediumURL",
-//      @"artworkUrl512":@"iconLargeURL",
       @"artistName":@"artistName",
       @"price":@"price",
       @"formattedPrice":@"formattedPrice",
@@ -61,15 +60,6 @@
     }];
 }
 
-//-(void)setIconLargeURL:(NSURL *)iconLargeURL
-//{
-//    _iconLargeURL = iconLargeURL;
-//    [self downloadImageAsync:iconLargeURL completion:^(UIImage *image) {
-//        self.iconLarge = image;
-//        imagesLoaded |= iconLarge;
-//        [self attemptImagesCompletionBlock];
-//    }];
-//}
 
 -(void)setPhoneScreenshotURLs:(NSArray *)phoneScreenshotURLs
 {
