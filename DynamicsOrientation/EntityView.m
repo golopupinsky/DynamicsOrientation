@@ -35,6 +35,8 @@
         [self initSelf:frame];
         [self initImageViews];
         [self initLabels];
+        [self initButtons];
+        [self initScreenshots];
         
         [self popIn];
     }
@@ -134,6 +136,7 @@
     
     
     UILabel *title = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 25)];
+    title.font = [UIFont boldSystemFontOfSize:20];
     title.text = entity.name;
     title.textAlignment = NSTextAlignmentCenter;
     title.translatesAutoresizingMaskIntoConstraints = NO;
@@ -164,7 +167,48 @@
                                                              constant:EXPANDED_SIZE*0.7]];
 
 
+    UILabel *device = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 25)];
+//    device.textColor = [UIColor darkGrayColor];
+    device.layer.shadowColor = [UIColor lightTextColor].CGColor;
+    device.layer.shadowOffset = CGSizeMake(0,0);
+    device.layer.shadowOpacity = 0.5;
+    device.font = [UIFont systemFontOfSize:8];
+    device.text = entity.formattedDeviceSupport;
+    device.textAlignment = NSTextAlignmentCenter;
+    device.translatesAutoresizingMaskIntoConstraints = NO;
+    [container addSubview:device];
+    
+    [container addConstraint:[NSLayoutConstraint constraintWithItem:device
+                                                          attribute:NSLayoutAttributeCenterX
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:title
+                                                          attribute:NSLayoutAttributeCenterX
+                                                         multiplier:1.0
+                                                           constant:0.0]];
+
+    [container addConstraint:[NSLayoutConstraint constraintWithItem:device
+                                                          attribute:NSLayoutAttributeTop
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:title
+                                                          attribute:NSLayoutAttributeBottom
+                                                         multiplier:1
+                                                           constant:5.0]];
+    
+    [device addConstraint:[NSLayoutConstraint constraintWithItem:device
+                                                      attribute:NSLayoutAttributeWidth
+                                                      relatedBy:NSLayoutRelationEqual
+                                                         toItem:nil
+                                                      attribute:0
+                                                     multiplier:1
+                                                       constant:EXPANDED_SIZE*0.5]];
+
+    
     UILabel *description = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 25)];
+    description.font = [UIFont systemFontOfSize:14];
+    description.textColor = [UIColor lightGrayColor];
+    description.layer.shadowColor = [UIColor darkTextColor].CGColor;
+    description.layer.shadowOffset = CGSizeMake(0,0);//CGSizeMake(5, 5);
+    description.layer.shadowOpacity = 0.5;
     description.text = entity.desc;
     description.textAlignment = NSTextAlignmentCenter;
     description.numberOfLines = 10;
@@ -182,7 +226,7 @@
     [container addConstraint:[NSLayoutConstraint constraintWithItem:description
                                                           attribute:NSLayoutAttributeTop
                                                           relatedBy:NSLayoutRelationEqual
-                                                             toItem:title
+                                                             toItem:device
                                                           attribute:NSLayoutAttributeBottom
                                                          multiplier:1
                                                            constant:10.0]];
@@ -196,6 +240,16 @@
                                                            constant:EXPANDED_SIZE*0.9]];
     
     [container bringSubviewToFront:iconView];
+    
+}
+
+-(void)initButtons
+{
+    
+}
+
+-(void)initScreenshots
+{
     
 }
 

@@ -33,6 +33,7 @@ typedef enum : NSUInteger {
 @property(nonatomic) NSString *desc;
 @property(nonatomic) NSString *currency;
 @property(nonatomic) NSString *name;
+@property(nonatomic) NSArray *supportedDevices;
 
 @property(nonatomic) UIImage *iconSmall;
 @property(nonatomic) UIImage *iconMedium;
@@ -41,6 +42,9 @@ typedef enum : NSUInteger {
 
 @property(nonatomic) NSMutableArray *phoneScreenshots;
 @property(nonatomic) NSMutableArray *tabletScreenshots;
+@property(nonatomic) BOOL isTabletOnly;
+@property(nonatomic) BOOL isUniversal;
+@property(nonatomic) NSString *formattedDeviceSupport;
 
 @property (nonatomic, copy) void (^imagesLoadCompletion)(void);
 

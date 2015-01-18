@@ -78,15 +78,19 @@ static NSString *LAST_QUERY = @"LAST_QUERY";
     
     void (^requestSuccessfullBlock)(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) =
     ^void(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-        [self.entities addObjectsFromArray: mappingResult.array];
-        for (StoreEntity *entity in self.entities)
+        for (StoreEntity *entity in mappingResult.array)
         {
-            __weak typeof(entity) weakEntity = entity;
-            entity.imagesLoadCompletion = ^{
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self addEntity:weakEntity];
-                });
-            };
+            if( ![self.entities containsObject:entity] )
+            {
+                [self.entities addObject:entity];
+                
+                __weak typeof(entity) weakEntity = entity;
+                entity.imagesLoadCompletion = ^{
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self addEntity:weakEntity];
+                    });
+                };
+            }
         }
     };
     void (^requestFailureBlock)(RKObjectRequestOperation *operation, NSError *error) =

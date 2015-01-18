@@ -29,7 +29,8 @@
       @"version":@"version",
       @"description":@"desc",
       @"currency":@"currency",
-      @"trackName":@"name"};
+      @"trackName":@"name",
+      @"supportedDevices":@"supportedDevices"};
 }
 
 
@@ -40,7 +41,7 @@
     [self downloadImageAsync:iconSmallURL completion:^(UIImage *image) {
         self.iconSmall = image;
         self.blurredIcon = [image   applyBlurWithRadius:5/*40*/
-                                    tintColor:[UIColor colorWithWhite:0.5 alpha:0.4]
+                                    tintColor:[UIColor colorWithWhite:0.2 alpha:0.4]
                                     saturationDeltaFactor:1.8
                                     maskImage:nil];
 
@@ -124,6 +125,53 @@
     if (imagesLoaded == allImages && self.imagesLoadCompletion != nil) {
         self.imagesLoadCompletion();
     }
+}
+
+-(BOOL)isTabletOnly
+{
+    if ([self.phoneScreenshotURLs count] == 0) {
+        return true;
+    }
+    return false;
+}
+
+-(BOOL)isUniversal
+{
+    if([self.phoneScreenshotURLs count] != 0 && [self.tabletScreenshotURLs count] != 0){
+        return true;
+    }
+    return false;
+}
+
+-(NSString *)formattedDeviceSupport
+{
+    if (self.isUniversal) {
+        return @"Universal app";
+    }
+    if(self.isTabletOnly)
+    {
+        return @"iPad app";
+    }
+    
+    return @"iPhone app";
+}
+
+- (BOOL)isEqual:(id)other
+{
+    if (other == self) {
+        return YES;
+    } else {
+        if(self.class != ((NSObject*)other).class){
+            return NO;
+        }
+        
+        return self.ID == ((StoreEntity*)other).ID;
+    }
+}
+
+- (NSUInteger)hash
+{
+    return [[NSNumber numberWithUnsignedInteger:self.ID] hash];
 }
 
 @end
