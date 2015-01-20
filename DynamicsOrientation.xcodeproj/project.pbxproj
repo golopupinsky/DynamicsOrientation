@@ -10,6 +10,7 @@
 		580BEF3B1A066BED00835FF2 /* MotionDynamicsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 580BEF3A1A066BED00835FF2 /* MotionDynamicsView.m */; };
 		5810D1EF1A642D1100386550 /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 5810D1EE1A642D1100386550 /* UIImage+ImageEffects.m */; };
 		5817D22E1A613DE3008C2E41 /* EntityView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5817D22D1A613DE3008C2E41 /* EntityView.m */; };
+		581D59491A6E6545005725F5 /* DownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 581D59481A6E6545005725F5 /* DownloadManager.m */; };
 		5897335A1A5D983000F94C4A /* StoreEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 589733591A5D983000F94C4A /* StoreEntity.m */; };
 		58A0C8C11A0568E30099A4FF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A0C8C01A0568E30099A4FF /* main.m */; };
 		58A0C8C41A0568E30099A4FF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A0C8C31A0568E30099A4FF /* AppDelegate.m */; };
@@ -30,6 +31,8 @@
 		5810D1EE1A642D1100386550 /* UIImage+ImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageEffects.m"; sourceTree = "<group>"; };
 		5817D22C1A613DE3008C2E41 /* EntityView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EntityView.h; sourceTree = "<group>"; };
 		5817D22D1A613DE3008C2E41 /* EntityView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EntityView.m; sourceTree = "<group>"; wrapsLines = 1; };
+		581D59471A6E6545005725F5 /* DownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadManager.h; sourceTree = "<group>"; };
+		581D59481A6E6545005725F5 /* DownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadManager.m; sourceTree = "<group>"; };
 		589733581A5D983000F94C4A /* StoreEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StoreEntity.h; sourceTree = "<group>"; };
 		589733591A5D983000F94C4A /* StoreEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StoreEntity.m; sourceTree = "<group>"; };
 		58A0C8BB1A0568E30099A4FF /* DynamicsOrientation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DynamicsOrientation.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -106,6 +109,8 @@
 				5817D22D1A613DE3008C2E41 /* EntityView.m */,
 				5810D1ED1A642D1100386550 /* UIImage+ImageEffects.h */,
 				5810D1EE1A642D1100386550 /* UIImage+ImageEffects.m */,
+				581D59471A6E6545005725F5 /* DownloadManager.h */,
+				581D59481A6E6545005725F5 /* DownloadManager.m */,
 			);
 			path = DynamicsOrientation;
 			sourceTree = "<group>";
@@ -249,6 +254,7 @@
 				58A0C8C41A0568E30099A4FF /* AppDelegate.m in Sources */,
 				58A0C8C11A0568E30099A4FF /* main.m in Sources */,
 				5817D22E1A613DE3008C2E41 /* EntityView.m in Sources */,
+				581D59491A6E6545005725F5 /* DownloadManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

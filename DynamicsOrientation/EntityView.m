@@ -113,6 +113,12 @@
 -(void)initLabels
 {
     UILabel *price = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 25)];
+    price.font = [UIFont boldSystemFontOfSize:15];
+    price.textColor = [UIColor grayColor];
+    price.layer.shadowColor = [UIColor darkTextColor].CGColor;
+    price.layer.shadowOffset = CGSizeMake(0,0);
+    price.layer.shadowOpacity = 0.5;
+    price.alpha = 0.7;
     price.text = entity.formattedPrice;
     price.textAlignment = NSTextAlignmentCenter;
     price.translatesAutoresizingMaskIntoConstraints = NO;
@@ -168,7 +174,6 @@
 
 
     UILabel *device = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 25)];
-//    device.textColor = [UIColor darkGrayColor];
     device.layer.shadowColor = [UIColor lightTextColor].CGColor;
     device.layer.shadowOffset = CGSizeMake(0,0);
     device.layer.shadowOpacity = 0.5;

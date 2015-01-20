@@ -14,7 +14,7 @@ typedef enum : NSUInteger {
     iconMedium          =   (1 << 1),
 //    phoneScreenshots    =   (1 << 3),
 //    padScreenshots      =   (1 << 4),
-    allImages           =   iconSmall|iconMedium
+    allImages           =   iconSmall|iconMedium//|phoneScreenshots|padScreenshots
 } ImagesLoadingStatus;
 
 @interface StoreEntity : NSObject
@@ -37,8 +37,8 @@ typedef enum : NSUInteger {
 @property(nonatomic) UIImage *iconMedium;
 @property(nonatomic) UIImage *blurredIcon;
 
-@property(nonatomic) NSMutableArray *phoneScreenshots;
-@property(nonatomic) NSMutableArray *tabletScreenshots;
+@property(nonatomic) NSMutableArray *screenshots;
+
 @property(nonatomic) BOOL isTabletOnly;
 @property(nonatomic) BOOL isUniversal;
 @property(nonatomic) NSString *formattedDeviceSupport;
